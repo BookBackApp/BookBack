@@ -968,7 +968,14 @@ function daysSince(d) {
 }
 
 // ── HOME ──
+let STAFF_NAME = 'Mason';
+
 async function loadHome() {
+  // fetch staff name from account
+  try {
+    const accs = await db('accounts', { select: 'staff_name', filter: `id=eq.${ACCOUNT_ID}` });
+    if (accs.length && accs[0].staff_name) STAFF_NAME = accs[0].staff_name;
+  } catch(e) {}
   try {
     const clients = await db('clients', { select: 'id,first_name,last_name,last_visit,status', filter: `account_id=eq.${ACCOUNT_ID}` });
     document.getElementById('stat-total').textContent = clients.length;
@@ -1017,7 +1024,6 @@ function clientCardHTML(c, showVisitBtn) {
   const badge = inactive
     ? `<span class="status-badge badge-inactive">Inactive</span>`
     : `<span class="status-badge badge-active">Active</span>`;
-  const vip = c.hot_list ? `<div class="meta-item"><div class="meta-label">VIP</div><div class="meta-value" style="color:var(--green)">⭐ Hot List</div></div>` : '';
   const visitBtn = showVisitBtn ? `<button class="btn-visited" onclick="markVisited('${c.id}', this)">Client Visited Today</button>` : '';
 
   return `
@@ -1026,6 +1032,8 @@ function clientCardHTML(c, showVisitBtn) {
       <div class="client-meta">
         <div><div class="meta-label">Last Visit</div><div class="meta-value">${formatDate(c.last_visit)}</div></div>
         <div><div class="meta-label">Status</div><div class="meta-value">${badge}</div></div>
+        <div><div class="meta-label">Staff</div><div class="meta-value">${STAFF_NAME}</div></div>
+        ${c.phone ? `<div><div class="meta-label">Phone</div><div class="meta-value" style="font-family:monospace;font-size:12px">${c.phone}</div></div>` : ''}
         ${c.hot_list ? `<div><div class="meta-label">VIP</div><div class="meta-value" style="color:var(--green);font-size:12px">⭐ Hot List</div></div>` : ''}
       </div>
       ${visitBtn}
