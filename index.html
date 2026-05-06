@@ -738,6 +738,38 @@
   </div>
 </nav>
 
+<!-- LOGIN PAGE -->
+<div id="login-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:24px;">
+  <div style="width:100%;max-width:360px;">
+    <div style="text-align:center;margin-bottom:40px;">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="64" height="64" style="margin:0 auto 16px;display:block;">
+        <rect width="100" height="100" rx="18" fill="#1a1a1a"/>
+        <g fill="none" stroke="#00E676" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M38 25 L38 75"/>
+          <path d="M38 25 L55 25 Q70 25 70 40 Q70 50 55 50 L38 50"/>
+          <path d="M38 50 L57 50 Q72 50 72 62 Q72 75 57 75 L38 75"/>
+          <path d="M28 38 L20 46 L28 54"/>
+          <path d="M20 46 L34 46"/>
+        </g>
+      </svg>
+      <div style="font-size:24px;font-weight:700;letter-spacing:-0.4px;">BookBack</div>
+      <div style="font-size:14px;color:var(--muted);margin-top:6px;">Sign in to your account</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div id="login-error" style="color:var(--danger);font-size:13px;margin-bottom:12px;display:none;text-align:center;"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px;" onclick="signIn()" id="login-btn">
+      Sign In
+    </button>
+  </div>
+</div>
+
 <!-- ADD CLIENT MODAL -->
 <div class="modal-overlay" id="add-client-modal">
   <div class="modal">
@@ -796,6 +828,62 @@
 const SUPABASE_URL = 'https://lirxjznkpfdzsbphmmoj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpcnhqem5rcGZkenNicGhtbW9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNTI2NzcsImV4cCI6MjA5MjYyODY3N30.fBFLKnqvXkj37mlpoIa07IMruqZMHkex5xtnrW1aXXM';
 const ACCOUNT_ID = 'cba3ee8d-b939-48e3-b12c-aedcd72667a6';
+let SESSION_TOKEN = null;
+
+// ── AUTH ──
+async function signIn() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const errEl = document.getElementById('login-error');
+  if (!email || !password) { showLoginError('Please enter your email and password'); return; }
+  btn.textContent = 'Signing in...';
+  btn.disabled = true;
+  errEl.style.display = 'none';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.msg || 'Login failed');
+    SESSION_TOKEN = data.access_token;
+    localStorage.setItem('bb_token', SESSION_TOKEN);
+    localStorage.setItem('bb_token_exp', Date.now() + (data.expires_in * 1000));
+    showApp();
+    loadHome();
+  } catch (e) {
+    showLoginError(e.message);
+  } finally {
+    btn.textContent = 'Sign In';
+    btn.disabled = false;
+  }
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function showApp() {
+  document.getElementById('login-page').style.display = 'none';
+  document.querySelector('.bottom-nav').style.display = 'flex';
+}
+
+function showLogin() {
+  document.getElementById('login-page').style.display = 'flex';
+  document.querySelector('.bottom-nav').style.display = 'none';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+}
+
+function signOut() {
+  SESSION_TOKEN = null;
+  localStorage.removeItem('bb_token');
+  localStorage.removeItem('bb_token_exp');
+  showLogin();
+}
 
 // ── SUPABASE HELPER ──
 async function db(table, options = {}) {
@@ -807,11 +895,13 @@ async function db(table, options = {}) {
   if (options.limit) params.push(`limit=${options.limit}`);
   if (params.length) url += '?' + params.join('&');
 
+  const token = SESSION_TOKEN || SUPABASE_ANON_KEY;
+
   const res = await fetch(url, {
     method: options.method || 'GET',
     headers: {
       'apikey': SUPABASE_ANON_KEY,
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
       'Prefer': options.prefer || 'return=representation'
     },
@@ -1169,7 +1259,17 @@ async function saveSettings() {
 }
 
 // ── INIT ──
-loadHome();
+(function() {
+  const token = localStorage.getItem("bb_token");
+  const exp = localStorage.getItem("bb_token_exp");
+  if (token && exp && Date.now() < parseInt(exp)) {
+    SESSION_TOKEN = token;
+    showApp();
+    loadHome();
+  } else {
+    showLogin();
+  }
+})();
 </script>
 </body>
 </html>
