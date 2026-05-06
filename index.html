@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>BookBack</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -21,96 +21,96 @@
     --warning: #ffab40;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
-    height: 100vh;
-    display: flex;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  /* SIDEBAR */
-  .sidebar {
-    width: 240px;
-    min-width: 240px;
+  /* ── MOBILE BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background: var(--sidebar);
-    border-right: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 50;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .nav-item {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 4px 8px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 600;
+    gap: 4px;
+    transition: color 0.15s;
+    user-select: none;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
   }
 
-  .logo {
+  .nav-item svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nav-item.active { color: var(--green); }
+
+  /* ── PAGES ── */
+  .page {
+    display: none;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .page.active { display: block; }
+
+  /* ── HEADER BANNER ── */
+  .banner {
+    background: linear-gradient(135deg, #0d2318 0%, #0a1a12 60%, #111212 100%);
+    padding: 20px 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .banner-top {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 0 20px 24px;
-    border-bottom: 1px solid var(--border);
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .logo-icon {
     width: 36px;
     height: 36px;
-    background: #000;
-    border: 2px solid var(--green);
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    font-size: 13px;
-    color: var(--green);
-    letter-spacing: -1px;
+    overflow: hidden;
+    flex-shrink: 0;
   }
 
-  .logo-text {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-
-  .nav {
-    flex: 1;
-    padding: 16px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.15s;
-    user-select: none;
-  }
-
-  .nav-item:hover { background: var(--card); color: var(--text); }
-  .nav-item.active { background: var(--green); color: #000; }
-  .nav-item.active svg { stroke: #000; }
-
-  .nav-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  .sidebar-footer {
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
-  }
-
-  .user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .logo-text { font-size: 15px; font-weight: 700; }
 
   .user-avatar {
     width: 32px;
@@ -125,376 +125,50 @@
     color: #000;
   }
 
-  .user-details { flex: 1; min-width: 0; }
-  .user-name { font-size: 13px; font-weight: 600; }
-  .user-email { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .banner-greeting { color: var(--green); font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+  .banner-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.2; }
 
-  /* MAIN */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+  /* ── CONTENT ── */
+  .content { padding: 16px; }
 
-  /* PAGE */
-  .page { display: none; flex-direction: column; height: 100%; overflow: hidden; }
-  .page.active { display: flex; }
+  /* ── PAGE HEADER ── */
+  .page-header { margin-bottom: 16px; }
+  .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 2px; }
+  .page-subtitle { color: var(--muted); font-size: 13px; }
 
-  /* HEADER BANNER */
-  .banner {
-    background: linear-gradient(135deg, #0d2318 0%, #0a1a12 50%, #111212 100%);
-    padding: 28px 32px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .banner-greeting { color: var(--green); font-size: 13px; font-weight: 600; margin-bottom: 4px; letter-spacing: 0.3px; }
-  .banner-title { font-size: 22px; font-weight: 700; letter-spacing: -0.4px; }
-
-  /* CONTENT */
-  .content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 28px 32px;
-  }
-
-  .content::-webkit-scrollbar { width: 4px; }
-  .content::-webkit-scrollbar-track { background: transparent; }
-  .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  /* PAGE HEADER */
-  .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .page-title { font-size: 22px; font-weight: 700; letter-spacing: -0.4px; }
-  .page-subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
-
-  /* SEARCH + ACTIONS */
-  .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .search-wrap {
-    position: relative;
-    flex: 1;
-    max-width: 320px;
-  }
-
-  .search-wrap svg {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 15px;
-    height: 15px;
-    stroke: var(--muted);
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .search-input {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px 9px 36px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    outline: none;
-    transition: border 0.15s;
-  }
-
-  .search-input:focus { border-color: var(--green); }
-  .search-input::placeholder { color: var(--muted); }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 16px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .btn-primary { background: var(--green); color: #000; }
-  .btn-primary:hover { background: var(--green-dim); }
-  .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: var(--card-hover); }
-  .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
-  .btn-danger:hover { background: var(--danger); color: #fff; }
-  .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* STATS ROW */
+  /* ── STATS ── */
   .stats-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-bottom: 28px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
   }
 
   .stat-card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 20px;
+    border-radius: 12px;
+    padding: 14px;
   }
 
-  .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .stat-value { font-size: 28px; font-weight: 700; letter-spacing: -1px; }
+  .stat-card.full { grid-column: 1 / -1; }
+  .stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+  .stat-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
   .stat-value.green { color: var(--green); }
   .stat-value.warning { color: var(--warning); }
 
-  /* CLIENT CARDS */
-  .client-list { display: flex; flex-direction: column; gap: 10px; }
-
-  .client-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: border-color 0.15s, background 0.15s;
-  }
-
-  .client-card:hover { background: var(--card-hover); border-color: #3a3d3d; }
-
-  .client-left { flex: 1; }
-  .client-name { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
-
-  .client-meta {
-    display: flex;
-    gap: 32px;
-  }
-
-  .meta-item { }
-  .meta-label { font-size: 11px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
-  .meta-value { font-size: 13px; font-weight: 500; }
-
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .status-badge::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-
-  .badge-active { background: rgba(0,230,118,0.12); color: var(--green); }
-  .badge-inactive { background: rgba(255,82,82,0.12); color: var(--danger); }
-
-  .client-right { margin-left: 20px; }
-
-  .btn-visited {
-    background: var(--green);
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .btn-visited:hover { background: var(--green-dim); transform: translateY(-1px); }
-  .btn-visited:active { transform: translateY(0); }
-  .btn-visited.loading { opacity: 0.6; cursor: not-allowed; }
-
-  /* GAP SLOT CARDS */
-  .gap-list { display: flex; flex-direction: column; gap: 10px; }
-
-  .gap-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .gap-card:hover { background: var(--card-hover); }
-
-  .gap-time { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-  .gap-message { font-size: 13px; color: var(--muted); }
-  .gap-status { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
-  .gap-open { background: rgba(0,230,118,0.12); color: var(--green); }
-  .gap-filled { background: rgba(138,143,143,0.15); color: var(--muted); }
-
-  /* EMPTY STATE */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--muted);
-  }
-
-  .empty-state svg {
-    width: 48px;
-    height: 48px;
-    stroke: var(--border);
-    fill: none;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    margin-bottom: 16px;
-  }
-
-  .empty-state p { font-size: 14px; }
-
-  /* MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-  }
-
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-    width: 100%;
-    max-width: 480px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-
-  .modal-title { font-size: 18px; font-weight: 700; }
-
-  .modal-close {
-    width: 32px;
-    height: 32px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    transition: all 0.15s;
-  }
-
-  .modal-close:hover { color: var(--text); border-color: var(--muted); }
-  .modal-close svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
-
-  /* FORM */
-  .form-group { margin-bottom: 18px; }
-  .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
-
-  .form-input {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border 0.15s;
-  }
-
-  .form-input:focus { border-color: var(--green); }
-  .form-input::placeholder { color: var(--muted); }
-
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-  .form-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 24px;
-  }
-
-  /* LOADING */
-  .loading-spinner {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(0,0,0,0.2);
-    border-top-color: #000;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 18px;
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 200;
-    transform: translateY(80px);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    max-width: 320px;
-  }
-
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.success { border-color: var(--green); color: var(--green); }
-  .toast.error { border-color: var(--danger); color: var(--danger); }
-
-  /* HOME TABS */
+  /* ── TABS ── */
   .tabs {
     display: flex;
-    gap: 0;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .tab {
-    padding: 10px 16px;
+    flex-shrink: 0;
+    padding: 10px 14px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -504,269 +178,571 @@
     transition: all 0.15s;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
+    white-space: nowrap;
   }
 
   .tab svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .tab:hover { color: var(--text); }
   .tab.active { color: var(--green); border-bottom-color: var(--green); }
 
-  /* CSV IMPORT */
+  /* ── SEARCH + TOOLBAR ── */
+  .toolbar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
+
+  .search-wrap { position: relative; flex: 1; }
+  .search-wrap svg {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px 10px 34px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .search-input:focus { border-color: var(--green); }
+  .search-input::placeholder { color: var(--muted); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+    -webkit-appearance: none;
+  }
+
+  .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .btn-primary { background: var(--green); color: #000; }
+  .btn-primary:active { background: var(--green-dim); }
+  .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  .btn-icon { padding: 10px; border-radius: 10px; background: var(--green); color: #000; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .btn-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ── CLIENT CARDS ── */
+  .list { display: flex; flex-direction: column; gap: 8px; }
+
+  .client-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+
+  .client-name { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+
+  .client-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .meta-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
+  .meta-value { font-size: 13px; font-weight: 500; }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .status-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .badge-active { background: rgba(0,230,118,0.12); color: var(--green); }
+  .badge-inactive { background: rgba(255,82,82,0.12); color: var(--danger); }
+
+  .btn-visited {
+    width: 100%;
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-visited:active { background: var(--green-dim); }
+  .btn-visited.done { background: #1c3828; color: var(--green); }
+
+  /* ── GAP SLOT CARDS ── */
+  .gap-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .gap-time { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .gap-message { font-size: 12px; color: var(--muted); }
+  .gap-status { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; }
+  .gap-open { background: rgba(0,230,118,0.12); color: var(--green); }
+  .gap-filled { background: rgba(138,143,143,0.15); color: var(--muted); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state svg {
+    width: 44px; height: 44px;
+    stroke: var(--border); fill: none;
+    stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+    margin-bottom: 12px;
+  }
+
+  .empty-state p { font-size: 14px; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+
+  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+
+  /* ── FORM ── */
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+
+  .form-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .form-input:focus { border-color: var(--green); }
+  .form-input::placeholder { color: var(--muted); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .form-actions .btn { flex: 1; justify-content: center; padding: 13px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 16px;
+    right: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 200;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-align: center;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: var(--green); color: var(--green); }
+  .toast.error { border-color: var(--danger); color: var(--danger); }
+
+  /* ── IMPORT ── */
   .import-zone {
     border: 2px dashed var(--border);
-    border-radius: 12px;
-    padding: 40px;
+    border-radius: 14px;
+    padding: 36px 20px;
     text-align: center;
     cursor: pointer;
     transition: all 0.15s;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
-  .import-zone:hover, .import-zone.dragover { border-color: var(--green); background: rgba(0,230,118,0.04); }
+  .import-zone:active { border-color: var(--green); background: rgba(0,230,118,0.04); }
   .import-zone svg { width: 40px; height: 40px; stroke: var(--muted); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; }
-  .import-zone p { color: var(--muted); font-size: 14px; }
-  .import-zone strong { color: var(--text); }
+  .import-zone p { color: var(--muted); font-size: 14px; line-height: 1.5; }
 
   .import-note {
     background: rgba(0,230,118,0.06);
     border: 1px solid rgba(0,230,118,0.2);
-    border-radius: 8px;
-    padding: 12px 16px;
+    border-radius: 10px;
+    padding: 12px 14px;
     font-size: 13px;
     color: var(--muted);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     line-height: 1.5;
   }
 
   .import-note strong { color: var(--green); }
 
-  /* SCROLLBAR */
+  .import-preview-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .import-preview-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .import-preview-row:last-child { border-bottom: none; }
+  .import-preview-name { font-weight: 600; }
+  .import-preview-phone { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; }
+
+  /* ── SETTINGS ── */
+  .settings-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .settings-section-title {
+    padding: 12px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .settings-item {
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .settings-item:last-child { border-bottom: none; }
+  .settings-item-label { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .settings-item-desc { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
+
+  .form-textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.15s;
+    -webkit-appearance: none;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  .form-textarea:focus { border-color: var(--green); }
+
+  /* scrollbar */
   * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="logo">
-    <div class="logo-icon">BB</div>
-    <span class="logo-text">BookBack</span>
-  </div>
-  <nav class="nav">
-    <div class="nav-item active" onclick="navigate('home')">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Home
-    </div>
-    <div class="nav-item" onclick="navigate('clients')">
-      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-      Clients
-    </div>
-    <div class="nav-item" onclick="navigate('gapslots')">
-      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Gap Slots
-    </div>
-    <div class="nav-item" onclick="navigate('import')">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Import Clients
-    </div>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="user-info">
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="banner">
+    <div class="banner-top">
+      <div class="logo-wrap">
+        <div class="logo-icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+            <rect width="100" height="100" rx="18" fill="#1a1a1a"/>
+            <g fill="none" stroke="#00E676" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+              <!-- B shape -->
+              <path d="M38 25 L38 75"/>
+              <path d="M38 25 L55 25 Q70 25 70 40 Q70 50 55 50 L38 50"/>
+              <path d="M38 50 L57 50 Q72 50 72 62 Q72 75 57 75 L38 75"/>
+              <!-- back arrow / return mark -->
+              <path d="M28 38 L20 46 L28 54"/>
+              <path d="M20 46 L34 46"/>
+            </g>
+          </svg>
+        </div>
+        <span class="logo-text">BookBack</span>
+      </div>
       <div class="user-avatar">M</div>
-      <div class="user-details">
-        <div class="user-name">Mason Homer</div>
-        <div class="user-email">masonhomer33@gmail.com</div>
-      </div>
     </div>
+    <div class="banner-greeting">Hey, Mason 👋</div>
+    <div class="banner-title">Keep clients coming back.</div>
   </div>
-</aside>
-
-<!-- MAIN -->
-<main class="main">
-
-  <!-- HOME PAGE -->
-  <div class="page active" id="page-home">
-    <div class="banner">
-      <div class="banner-greeting">Hey, Mason 👋</div>
-      <div class="banner-title">Keep clients coming back and fill your gaps.</div>
-    </div>
-    <div class="content">
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-label">Total Clients</div>
-          <div class="stat-value green" id="stat-total">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Inactive (35+ days)</div>
-          <div class="stat-value warning" id="stat-inactive">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Texts Sent This Month</div>
-          <div class="stat-value" id="stat-texts">—</div>
-        </div>
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Clients</div>
+        <div class="stat-value green" id="stat-total">—</div>
       </div>
-
-      <div class="tabs">
-        <div class="tab active" onclick="switchTab('inactive')">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          Inactive Clients
-        </div>
-        <div class="tab" onclick="switchTab('slots')">
-          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Open Gap Slots
-        </div>
+      <div class="stat-card">
+        <div class="stat-label">Inactive</div>
+        <div class="stat-value warning" id="stat-inactive">—</div>
       </div>
-
-      <div id="tab-inactive">
-        <div class="client-list" id="home-inactive-list">
-          <div class="empty-state">
-            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            <p>Loading inactive clients...</p>
-          </div>
-        </div>
-      </div>
-
-      <div id="tab-slots" style="display:none">
-        <div class="gap-list" id="home-gap-list">
-          <div class="empty-state">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <p>Loading gap slots...</p>
-          </div>
-        </div>
+      <div class="stat-card full">
+        <div class="stat-label">Texts Sent This Month</div>
+        <div class="stat-value" id="stat-texts">—</div>
       </div>
     </div>
-  </div>
 
-  <!-- CLIENTS PAGE -->
-  <div class="page" id="page-clients">
-    <div class="content">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Clients</div>
-          <div class="page-subtitle">Search and manage your client list</div>
-        </div>
-        <div class="toolbar">
-          <div class="search-wrap">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input class="search-input" type="text" placeholder="Search clients..." oninput="filterClients(this.value)" id="client-search">
-          </div>
-          <button class="btn btn-primary" onclick="openModal('add-client-modal')">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add client
-          </button>
-        </div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('inactive', this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Inactive Clients
       </div>
-      <div class="client-list" id="clients-list">
+      <div class="tab" onclick="switchTab('slots', this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Open Gap Slots
+      </div>
+    </div>
+
+    <div id="tab-inactive">
+      <div class="list" id="home-inactive-list">
         <div class="empty-state">
           <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          <p>Loading clients...</p>
+          <p>Loading...</p>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- GAP SLOTS PAGE -->
-  <div class="page" id="page-gapslots">
-    <div class="content">
-      <div class="page-header">
-        <div>
-          <div class="page-title">Open Gap Slots</div>
-          <div class="page-subtitle">Post and manage empty appointment slots</div>
-        </div>
-        <div class="toolbar">
-          <div class="search-wrap">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input class="search-input" type="text" placeholder="Search gap slots...">
-          </div>
-          <button class="btn btn-primary" onclick="openModal('add-gap-modal')">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add gap slot
-          </button>
-        </div>
-      </div>
-      <div class="gap-list" id="gap-list">
+    <div id="tab-slots" style="display:none">
+      <div class="list" id="home-gap-list">
         <div class="empty-state">
           <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <p>Loading gap slots...</p>
+          <p>Loading...</p>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- IMPORT PAGE -->
-  <div class="page" id="page-import">
-    <div class="content">
-      <div class="page-header">
+<!-- CLIENTS PAGE -->
+<div class="page" id="page-clients">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-title">Clients</div>
+      <div class="page-subtitle">Search and manage your client list</div>
+    </div>
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" type="text" placeholder="Search clients..." oninput="filterClients(this.value)">
+      </div>
+      <button class="btn-icon" onclick="openModal('add-client-modal')">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+    <div class="list" id="clients-list">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <p>Loading clients...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAP SLOTS PAGE -->
+<div class="page" id="page-gapslots">
+  <div class="content">
+    <div class="page-header">
+      <div style="display:flex;align-items:center;justify-content:space-between">
         <div>
-          <div class="page-title">Import Clients</div>
-          <div class="page-subtitle">Upload a CSV from Booksy, Fresha, or Square</div>
+          <div class="page-title">Gap Slots</div>
+          <div class="page-subtitle">Post empty appointment slots</div>
         </div>
+        <button class="btn btn-primary" onclick="openModal('add-gap-modal')">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add slot
+        </button>
       </div>
-
-      <div class="import-note">
-        <strong>No welcome texts will be sent</strong> for imported clients. Only new clients added manually through the app trigger the welcome text automation.
-      </div>
-
-      <div class="import-zone" id="import-zone" onclick="document.getElementById('csv-file').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        <p><strong>Click to upload</strong> or drag and drop</p>
-        <p style="margin-top:6px;font-size:12px;">CSV files only — Booksy, Fresha, Square supported</p>
-      </div>
-      <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="handleFileSelect(event)">
-
-      <div id="import-preview" style="display:none">
-        <div class="page-header" style="margin-bottom:12px">
-          <div>
-            <div style="font-size:15px;font-weight:600" id="import-filename"></div>
-            <div style="font-size:13px;color:var(--muted)" id="import-count"></div>
-          </div>
-          <div class="toolbar">
-            <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
-            <button class="btn btn-primary" onclick="confirmImport()" id="import-btn">
-              Import Clients
-            </button>
-          </div>
-        </div>
-
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
-          <div style="overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse" id="import-table">
-              <thead>
-                <tr style="border-bottom:1px solid var(--border)">
-                  <th style="padding:12px 16px;text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px">First Name</th>
-                  <th style="padding:12px 16px;text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px">Last Name</th>
-                  <th style="padding:12px 16px;text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px">Phone</th>
-                  <th style="padding:12px 16px;text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px">Last Visit</th>
-                  <th style="padding:12px 16px;text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px">Status</th>
-                </tr>
-              </thead>
-              <tbody id="import-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div id="import-result" style="display:none">
-        <div class="stat-card" style="max-width:400px">
-          <div class="stat-label">Import Complete</div>
-          <div id="import-result-text" style="font-size:14px;margin-top:8px;line-height:1.6;color:var(--muted)"></div>
-          <button class="btn btn-primary" style="margin-top:16px" onclick="resetImport()">Import Another File</button>
-        </div>
+    </div>
+    <div class="list" id="gap-list">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <p>Loading gap slots...</p>
       </div>
     </div>
   </div>
+</div>
 
-</main>
+<!-- IMPORT PAGE -->
+<div class="page" id="page-import">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-title">Import Clients</div>
+      <div class="page-subtitle">Upload a CSV from Booksy, Fresha or Square</div>
+    </div>
+
+    <div class="import-note">
+      <strong>No welcome texts will fire</strong> for imported clients. Only manually added clients trigger the welcome automation.
+    </div>
+
+    <div class="import-zone" id="import-zone" onclick="document.getElementById('csv-file').click()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p><strong style="color:var(--text)">Tap to upload CSV</strong><br>Booksy, Fresha, Square supported</p>
+    </div>
+    <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="handleFileSelect(event)">
+
+    <div id="import-preview" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <div style="font-size:15px;font-weight:600" id="import-filename"></div>
+          <div style="font-size:13px;color:var(--muted)" id="import-count"></div>
+        </div>
+        <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
+      </div>
+      <div class="import-preview-card" id="import-preview-list"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="confirmImport()" id="import-btn">
+        Import Clients
+      </button>
+    </div>
+
+    <div id="import-result" style="display:none">
+      <div class="stat-card">
+        <div class="stat-label">Import Complete</div>
+        <div id="import-result-text" style="font-size:14px;margin-top:8px;line-height:1.7;color:var(--muted)"></div>
+        <button class="btn btn-primary" style="margin-top:16px;width:100%;justify-content:center" onclick="resetImport()">Import Another File</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS PAGE -->
+<div class="page" id="page-settings">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-title">Settings</div>
+      <div class="page-subtitle">Customise your messages and rules</div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Inactivity Rules</div>
+      <div class="settings-item">
+        <div class="settings-item-label">Inactive After (days)</div>
+        <div class="settings-item-desc">Clients who haven't visited in this many days will be flagged as inactive and texted automatically.</div>
+        <input class="form-input" type="number" id="setting-inactive-days" placeholder="35" min="7" max="365">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">SMS Messages</div>
+      <div class="settings-item">
+        <div class="settings-item-label">Welcome Text</div>
+        <div class="settings-item-desc">Sent 60 minutes after a new client is added. Use {first_name} and {shop_name}.</div>
+        <textarea class="form-textarea" id="setting-welcome-msg" placeholder="Hi {first_name}, welcome to {shop_name}!..."></textarea>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item-label">Inactive Client Text</div>
+        <div class="settings-item-desc">Sent when a client hasn't visited in the set number of days. Use {first_name} and {shop_name}.</div>
+        <textarea class="form-textarea" id="setting-inactive-msg" placeholder="Hi {first_name}, it's been a while!..."></textarea>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item-label">Gap Slot Text</div>
+        <div class="settings-item-desc">Sent to VIP hot list clients when a gap slot is posted. Use {first_name}, {shop_name}, {slot_time}.</div>
+        <textarea class="form-textarea" id="setting-gap-msg" placeholder="Last minute slot available {slot_time} at {shop_name}!..."></textarea>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="saveSettings()" id="save-settings-btn">
+      Save Settings
+    </button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-home" onclick="navigate('home', this)">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </div>
+  <div class="nav-item" id="nav-clients" onclick="navigate('clients', this)">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    Clients
+  </div>
+  <div class="nav-item" id="nav-gapslots" onclick="navigate('gapslots', this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Gap Slots
+  </div>
+  <div class="nav-item" id="nav-import" onclick="navigate('import', this)">
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    Import
+  </div>
+  <div class="nav-item" id="nav-settings" onclick="navigate('settings', this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    Settings
+  </div>
+</nav>
 
 <!-- ADD CLIENT MODAL -->
 <div class="modal-overlay" id="add-client-modal">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Add New Client</div>
-      <button class="modal-close" onclick="closeModal('add-client-modal')">
-        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add New Client</div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">First Name</label>
@@ -795,24 +771,20 @@
 <!-- ADD GAP SLOT MODAL -->
 <div class="modal-overlay" id="add-gap-modal">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Add Gap Slot</div>
-      <button class="modal-close" onclick="closeModal('add-gap-modal')">
-        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add Gap Slot</div>
     <div class="form-group">
-      <label class="form-label">Slot Date & Time</label>
+      <label class="form-label">Date & Time</label>
       <input class="form-input" type="datetime-local" id="gap-datetime">
     </div>
     <div class="form-group">
       <label class="form-label">Custom Message (optional)</label>
-      <input class="form-input" type="text" id="gap-message" placeholder="e.g. Cancellation available 2pm today!">
-      <div style="font-size:12px;color:var(--muted);margin-top:6px">Leave blank to use the default gap slot message</div>
+      <input class="form-input" type="text" id="gap-message" placeholder="e.g. Cancellation available 2pm!">
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">Leave blank to use your default gap slot message</div>
     </div>
     <div class="form-actions">
       <button class="btn btn-secondary" onclick="closeModal('add-gap-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="addGapSlot()" id="add-gap-btn">Post Gap Slot</button>
+      <button class="btn btn-primary" onclick="addGapSlot()" id="add-gap-btn">Post Slot</button>
     </div>
   </div>
 </div>
@@ -821,17 +793,12 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════
-// CONFIG — paste your Supabase details here
-// ═══════════════════════════════════════
 const SUPABASE_URL = 'https://lirxjznkpfdzsbphmmoj.supabase.co';
-const SUPABASE_ANON_KEY = 'PASTE_YOUR_LEGACY_ANON_JWT_KEY_HERE';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpcnhqem5rcGZkenNicGhtbW9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNTI2NzcsImV4cCI6MjA5MjYyODY3N30.fBFLKnqvXkj37mlpoIa07IMruqZMHkex5xtnrW1aXXM';
 const ACCOUNT_ID = 'cba3ee8d-b939-48e3-b12c-aedcd72667a6';
 
-// ═══════════════════════════════════════
-// SUPABASE API HELPER
-// ═══════════════════════════════════════
-async function supabase(table, options = {}) {
+// ── SUPABASE HELPER ──
+async function db(table, options = {}) {
   let url = `${SUPABASE_URL}/rest/v1/${table}`;
   const params = [];
   if (options.select) params.push(`select=${options.select}`);
@@ -859,39 +826,34 @@ async function supabase(table, options = {}) {
   return options.method === 'DELETE' ? null : res.json();
 }
 
-// ═══════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════
-function navigate(page) {
+// ── NAVIGATION ──
+function navigate(page, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  event.currentTarget.classList.add('active');
-
+  el.classList.add('active');
+  window.scrollTo(0, 0);
   if (page === 'home') loadHome();
   if (page === 'clients') loadClients();
   if (page === 'gapslots') loadGapSlots();
+  if (page === 'settings') loadSettings();
 }
 
-function switchTab(tab) {
+function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  el.classList.add('active');
   document.getElementById('tab-inactive').style.display = tab === 'inactive' ? 'block' : 'none';
   document.getElementById('tab-slots').style.display = tab === 'slots' ? 'block' : 'none';
 }
 
-// ═══════════════════════════════════════
-// MODALS
-// ═══════════════════════════════════════
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+// ── MODALS ──
+function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
 document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+  m.addEventListener('click', e => { if (e.target === m) { m.classList.remove('open'); document.body.style.overflow = ''; } });
 });
 
-// ═══════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════
+// ── TOAST ──
 function showToast(msg, type = 'success') {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -899,9 +861,7 @@ function showToast(msg, type = 'success') {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// ═══════════════════════════════════════
-// FORMAT HELPERS
-// ═══════════════════════════════════════
+// ── HELPERS ──
 function formatDate(d) {
   if (!d) return '—';
   return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -917,141 +877,89 @@ function daysSince(d) {
   return Math.floor((Date.now() - new Date(d)) / 86400000);
 }
 
-// ═══════════════════════════════════════
-// HOME
-// ═══════════════════════════════════════
+// ── HOME ──
 async function loadHome() {
   try {
-    const clients = await supabase('clients', {
-      select: 'id,first_name,last_name,last_visit,status,hot_list',
-      filter: `account_id=eq.${ACCOUNT_ID}`
-    });
-
+    const clients = await db('clients', { select: 'id,first_name,last_name,last_visit,status', filter: `account_id=eq.${ACCOUNT_ID}` });
     document.getElementById('stat-total').textContent = clients.length;
-
-    const inactive = clients.filter(c => daysSince(c.last_visit) >= 35 && c.status !== 'opted_out');
+    const inactive = clients.filter(c => daysSince(c.last_visit) >= 35);
     document.getElementById('stat-inactive').textContent = inactive.length;
 
-    // Texts this month
-    const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const msgs = await supabase('messages', {
-      select: 'id',
-      filter: `account_id=eq.${ACCOUNT_ID}&status=eq.sent&created_at=gte.${monthStart}`
-    });
+    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+    const msgs = await db('messages', { select: 'id', filter: `account_id=eq.${ACCOUNT_ID}&status=eq.sent&created_at=gte.${monthStart}` });
     document.getElementById('stat-texts').textContent = msgs.length;
 
-    // Inactive list
     const inactiveList = document.getElementById('home-inactive-list');
     if (inactive.length === 0) {
-      inactiveList.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>No inactive clients right now</p></div>`;
+      inactiveList.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>No inactive clients right now 🎉</p></div>`;
     } else {
       inactiveList.innerHTML = inactive.map(c => clientCardHTML(c, false)).join('');
     }
 
-    // Gap slots
-    const slots = await supabase('gap_slots', {
-      select: '*',
-      filter: `account_id=eq.${ACCOUNT_ID}&status=eq.open`,
-      order: 'slot_time.asc'
-    });
-
+    const slots = await db('gap_slots', { select: '*', filter: `account_id=eq.${ACCOUNT_ID}&status=eq.open`, order: 'slot_time.asc' });
     const gapList = document.getElementById('home-gap-list');
-    if (slots.length === 0) {
-      gapList.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No open gap slots</p></div>`;
-    } else {
-      gapList.innerHTML = slots.map(s => gapCardHTML(s)).join('');
-    }
+    gapList.innerHTML = slots.length === 0
+      ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No open gap slots</p></div>`
+      : slots.map(s => gapCardHTML(s)).join('');
 
-  } catch (e) {
-    showToast('Failed to load data: ' + e.message, 'error');
-  }
+  } catch (e) { showToast('Failed to load: ' + e.message, 'error'); }
 }
 
-// ═══════════════════════════════════════
-// CLIENTS
-// ═══════════════════════════════════════
+// ── CLIENTS ──
 let allClients = [];
 
 async function loadClients() {
   try {
-    allClients = await supabase('clients', {
-      select: 'id,first_name,last_name,phone,last_visit,status,hot_list',
-      filter: `account_id=eq.${ACCOUNT_ID}`,
-      order: 'first_name.asc'
-    });
+    allClients = await db('clients', { select: 'id,first_name,last_name,phone,last_visit,status,hot_list', filter: `account_id=eq.${ACCOUNT_ID}`, order: 'first_name.asc' });
     renderClients(allClients);
-  } catch (e) {
-    showToast('Failed to load clients: ' + e.message, 'error');
-  }
+  } catch (e) { showToast('Failed to load clients: ' + e.message, 'error'); }
 }
 
 function renderClients(clients) {
   const el = document.getElementById('clients-list');
-  if (clients.length === 0) {
-    el.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>No clients found</p></div>`;
-    return;
-  }
-  el.innerHTML = clients.map(c => clientCardHTML(c, true)).join('');
+  el.innerHTML = clients.length === 0
+    ? `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>No clients found</p></div>`
+    : clients.map(c => clientCardHTML(c, true)).join('');
 }
 
 function clientCardHTML(c, showVisitBtn) {
-  const days = daysSince(c.last_visit);
-  const isInactive = days >= 35;
-  const badge = isInactive
+  const inactive = daysSince(c.last_visit) >= 35;
+  const badge = inactive
     ? `<span class="status-badge badge-inactive">Inactive</span>`
     : `<span class="status-badge badge-active">Active</span>`;
-
-  const visitBtn = showVisitBtn
-    ? `<button class="btn-visited" onclick="markVisited('${c.id}', this)">Client Visited Today</button>`
-    : '';
+  const vip = c.hot_list ? `<div class="meta-item"><div class="meta-label">VIP</div><div class="meta-value" style="color:var(--green)">⭐ Hot List</div></div>` : '';
+  const visitBtn = showVisitBtn ? `<button class="btn-visited" onclick="markVisited('${c.id}', this)">Client Visited Today</button>` : '';
 
   return `
-    <div class="client-card" data-id="${c.id}">
-      <div class="client-left">
-        <div class="client-name">${c.first_name} ${c.last_name}</div>
-        <div class="client-meta">
-          <div class="meta-item">
-            <div class="meta-label">Last Visit</div>
-            <div class="meta-value">${formatDate(c.last_visit)}</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Status</div>
-            <div class="meta-value">${badge}</div>
-          </div>
-          ${c.hot_list ? `<div class="meta-item"><div class="meta-label">VIP</div><div class="meta-value" style="color:var(--green)">⭐ Hot List</div></div>` : ''}
-        </div>
+    <div class="client-card">
+      <div class="client-name">${c.first_name} ${c.last_name}</div>
+      <div class="client-meta">
+        <div><div class="meta-label">Last Visit</div><div class="meta-value">${formatDate(c.last_visit)}</div></div>
+        <div><div class="meta-label">Status</div><div class="meta-value">${badge}</div></div>
+        ${c.hot_list ? `<div><div class="meta-label">VIP</div><div class="meta-value" style="color:var(--green);font-size:12px">⭐ Hot List</div></div>` : ''}
       </div>
-      <div class="client-right">${visitBtn}</div>
+      ${visitBtn}
     </div>`;
 }
 
 function filterClients(q) {
-  const filtered = allClients.filter(c =>
-    `${c.first_name} ${c.last_name}`.toLowerCase().includes(q.toLowerCase())
-  );
-  renderClients(filtered);
+  renderClients(allClients.filter(c => `${c.first_name} ${c.last_name}`.toLowerCase().includes(q.toLowerCase())));
 }
 
 async function markVisited(clientId, btn) {
-  btn.classList.add('loading');
   btn.textContent = 'Saving...';
+  btn.disabled = true;
   try {
     const today = new Date().toISOString().split('T')[0];
-    await supabase('clients', {
-      method: 'PATCH',
-      filter: `id=eq.${clientId}`,
-      prefer: 'return=minimal',
-      body: { last_visit: today, updated_at: new Date().toISOString() }
-    });
+    await db('clients', { method: 'PATCH', filter: `id=eq.${clientId}`, prefer: 'return=minimal', body: { last_visit: today, updated_at: new Date().toISOString() } });
     btn.textContent = '✓ Updated';
-    btn.style.background = 'var(--green-dim)';
-    showToast('Last visit updated to today');
+    btn.classList.add('done');
+    showToast('Last visit updated to today ✓');
     setTimeout(() => loadClients(), 1500);
   } catch (e) {
-    btn.textContent = 'Failed';
-    btn.style.background = 'var(--danger)';
-    showToast('Failed to update: ' + e.message, 'error');
+    btn.textContent = 'Failed — tap to retry';
+    btn.disabled = false;
+    showToast('Failed: ' + e.message, 'error');
   }
 }
 
@@ -1068,127 +976,81 @@ async function addClient() {
   btn.disabled = true;
 
   try {
-    await supabase('clients', {
-      method: 'POST',
-      prefer: 'return=minimal',
-      body: {
-        account_id: ACCOUNT_ID,
-        first_name: firstName,
-        last_name: lastName,
-        phone: phone,
-        last_visit: lastVisit || null,
-        import_source: 'new',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }
+    await db('clients', {
+      method: 'POST', prefer: 'return=minimal',
+      body: { account_id: ACCOUNT_ID, first_name: firstName, last_name: lastName, phone, last_visit: lastVisit || null, import_source: 'new', created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
     });
     closeModal('add-client-modal');
-    showToast(`${firstName} added — welcome text will fire in 60 mins`);
-    document.getElementById('client-firstname').value = '';
-    document.getElementById('client-lastname').value = '';
-    document.getElementById('client-phone').value = '';
-    document.getElementById('client-lastvisit').value = '';
+    showToast(`${firstName} added — welcome text fires in 60 mins ✓`);
+    ['client-firstname','client-lastname','client-phone','client-lastvisit'].forEach(id => document.getElementById(id).value = '');
     loadClients();
   } catch (e) {
-    showToast('Failed to add client: ' + e.message, 'error');
+    showToast('Failed: ' + e.message, 'error');
   } finally {
     btn.textContent = 'Add Client';
     btn.disabled = false;
   }
 }
 
-// ═══════════════════════════════════════
-// GAP SLOTS
-// ═══════════════════════════════════════
+// ── GAP SLOTS ──
 async function loadGapSlots() {
   try {
-    const slots = await supabase('gap_slots', {
-      select: '*',
-      filter: `account_id=eq.${ACCOUNT_ID}`,
-      order: 'slot_time.desc'
-    });
-
+    const slots = await db('gap_slots', { select: '*', filter: `account_id=eq.${ACCOUNT_ID}`, order: 'slot_time.desc' });
     const el = document.getElementById('gap-list');
-    if (slots.length === 0) {
-      el.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No gap slots yet. Add one to text your VIP clients.</p></div>`;
-    } else {
-      el.innerHTML = slots.map(s => gapCardHTML(s)).join('');
-    }
-  } catch (e) {
-    showToast('Failed to load gap slots: ' + e.message, 'error');
-  }
+    el.innerHTML = slots.length === 0
+      ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No gap slots yet. Add one to text your VIP clients.</p></div>`
+      : slots.map(s => gapCardHTML(s)).join('');
+  } catch (e) { showToast('Failed: ' + e.message, 'error'); }
 }
 
 function gapCardHTML(s) {
-  const statusClass = s.status === 'open' ? 'gap-open' : 'gap-filled';
-  const statusLabel = s.status === 'open' ? 'Open' : 'Filled';
   return `
     <div class="gap-card">
       <div>
         <div class="gap-time">${formatDateTime(s.slot_time)}</div>
         <div class="gap-message">${s.message || 'Default gap slot message'}</div>
       </div>
-      <span class="gap-status ${statusClass}">${statusLabel}</span>
+      <span class="gap-status ${s.status === 'open' ? 'gap-open' : 'gap-filled'}">${s.status === 'open' ? 'Open' : 'Filled'}</span>
     </div>`;
 }
 
 async function addGapSlot() {
   const datetime = document.getElementById('gap-datetime').value;
   const message = document.getElementById('gap-message').value.trim();
-
-  if (!datetime) { showToast('Please select a date and time', 'error'); return; }
+  if (!datetime) { showToast('Please pick a date and time', 'error'); return; }
 
   const btn = document.getElementById('add-gap-btn');
   btn.textContent = 'Posting...';
   btn.disabled = true;
 
   try {
-    await supabase('gap_slots', {
-      method: 'POST',
-      prefer: 'return=minimal',
-      body: {
-        account_id: ACCOUNT_ID,
-        slot_time: new Date(datetime).toISOString(),
-        message: message || null,
-        status: 'open',
-        created_at: new Date().toISOString()
-      }
+    await db('gap_slots', {
+      method: 'POST', prefer: 'return=minimal',
+      body: { account_id: ACCOUNT_ID, slot_time: new Date(datetime).toISOString(), message: message || null, status: 'open', created_at: new Date().toISOString() }
     });
     closeModal('add-gap-modal');
-    showToast('Gap slot posted — VIP clients will be texted');
+    showToast('Gap slot posted — VIP clients will be texted ✓');
     document.getElementById('gap-datetime').value = '';
     document.getElementById('gap-message').value = '';
     loadGapSlots();
   } catch (e) {
-    showToast('Failed to post gap slot: ' + e.message, 'error');
+    showToast('Failed: ' + e.message, 'error');
   } finally {
-    btn.textContent = 'Post Gap Slot';
+    btn.textContent = 'Post Slot';
     btn.disabled = false;
   }
 }
 
-// ═══════════════════════════════════════
-// CSV IMPORT
-// ═══════════════════════════════════════
+// ── CSV IMPORT ──
 let parsedRows = [];
 
-function handleDragOver(e) { e.preventDefault(); document.getElementById('import-zone').classList.add('dragover'); }
-function handleDragLeave() { document.getElementById('import-zone').classList.remove('dragover'); }
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('import-zone').classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file) processCSV(file);
-}
 function handleFileSelect(e) { if (e.target.files[0]) processCSV(e.target.files[0]); }
 
 function processCSV(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
-    const text = e.target.result;
-    const lines = text.split('\n').filter(l => l.trim());
+    const lines = e.target.result.split('\n').filter(l => l.trim());
     if (lines.length < 2) { showToast('CSV appears empty', 'error'); return; }
-
     const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/['"]/g, ''));
     parsedRows = [];
 
@@ -1196,16 +1058,11 @@ function processCSV(file) {
       const cols = lines[i].split(',').map(c => c.trim().replace(/['"]/g, ''));
       const row = {};
       headers.forEach((h, idx) => row[h] = cols[idx] || '');
-
-      // Try to map common column name variations
-      const firstName = row['first name'] || row['firstname'] || row['first_name'] || row['name']?.split(' ')[0] || '';
-      const lastName = row['last name'] || row['lastname'] || row['last_name'] || row['name']?.split(' ').slice(1).join(' ') || '';
+      const firstName = row['first name'] || row['firstname'] || row['first_name'] || (row['name'] || '').split(' ')[0] || '';
+      const lastName = row['last name'] || row['lastname'] || row['last_name'] || (row['name'] || '').split(' ').slice(1).join(' ') || '';
       const phone = row['phone'] || row['mobile'] || row['phone number'] || row['telephone'] || '';
       const lastVisit = row['last visit'] || row['lastvisit'] || row['last_visit'] || row['last appointment'] || '';
-
-      if (firstName || phone) {
-        parsedRows.push({ firstName, lastName, phone, lastVisit });
-      }
+      if (firstName || phone) parsedRows.push({ firstName, lastName, phone, lastVisit });
     }
 
     document.getElementById('import-filename').textContent = file.name;
@@ -1213,46 +1070,31 @@ function processCSV(file) {
     document.getElementById('import-zone').style.display = 'none';
     document.getElementById('import-preview').style.display = 'block';
 
-    const tbody = document.getElementById('import-tbody');
-    tbody.innerHTML = parsedRows.slice(0, 20).map((r, i) => `
-      <tr style="border-bottom:1px solid var(--border)">
-        <td style="padding:10px 16px;font-size:13px">${r.firstName}</td>
-        <td style="padding:10px 16px;font-size:13px">${r.lastName}</td>
-        <td style="padding:10px 16px;font-size:13px;font-family:'DM Mono',monospace">${r.phone}</td>
-        <td style="padding:10px 16px;font-size:13px">${r.lastVisit || '—'}</td>
-        <td style="padding:10px 16px"><span class="status-badge badge-active">Ready</span></td>
-      </tr>`).join('');
+    const preview = document.getElementById('import-preview-list');
+    preview.innerHTML = parsedRows.slice(0, 15).map(r => `
+      <div class="import-preview-row">
+        <div class="import-preview-name">${r.firstName} ${r.lastName}</div>
+        <div class="import-preview-phone">${r.phone || '—'}</div>
+      </div>`).join('');
 
-    if (parsedRows.length > 20) {
-      tbody.innerHTML += `<tr><td colspan="5" style="padding:12px 16px;font-size:13px;color:var(--muted);text-align:center">...and ${parsedRows.length - 20} more</td></tr>`;
+    if (parsedRows.length > 15) {
+      preview.innerHTML += `<div class="import-preview-row" style="justify-content:center;color:var(--muted)">...and ${parsedRows.length - 15} more</div>`;
     }
   };
   reader.readAsText(file);
 }
 
 async function confirmImport() {
-  if (!parsedRows.length) return;
   const btn = document.getElementById('import-btn');
   btn.textContent = 'Importing...';
   btn.disabled = true;
-
   let imported = 0, duplicates = 0, failed = 0;
 
   for (const row of parsedRows) {
     try {
-      await supabase('clients', {
-        method: 'POST',
-        prefer: 'resolution=ignore-duplicates,return=minimal',
-        body: {
-          account_id: ACCOUNT_ID,
-          first_name: row.firstName,
-          last_name: row.lastName,
-          phone: row.phone,
-          last_visit: row.lastVisit || null,
-          import_source: 'csv_import',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
+      await db('clients', {
+        method: 'POST', prefer: 'resolution=ignore-duplicates,return=minimal',
+        body: { account_id: ACCOUNT_ID, first_name: row.firstName, last_name: row.lastName, phone: row.phone, last_visit: row.lastVisit || null, import_source: 'csv_import', created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
       });
       imported++;
     } catch (e) {
@@ -1265,10 +1107,9 @@ async function confirmImport() {
   document.getElementById('import-result').style.display = 'block';
   document.getElementById('import-result-text').innerHTML = `
     <span style="color:var(--green)">✓ ${imported} clients imported</span><br>
-    ${duplicates ? `<span style="color:var(--muted)">⊘ ${duplicates} duplicates skipped</span><br>` : ''}
-    ${failed ? `<span style="color:var(--danger)">✗ ${failed} failed</span>` : ''}
-    <br><br>No welcome texts will be sent to imported clients.
-  `;
+    ${duplicates ? `<span>⊘ ${duplicates} duplicates skipped</span><br>` : ''}
+    ${failed ? `<span style="color:var(--danger)">✗ ${failed} failed</span><br>` : ''}
+    <br>No welcome texts sent to imported clients.`;
 }
 
 function cancelImport() {
@@ -1286,9 +1127,48 @@ function resetImport() {
   document.getElementById('csv-file').value = '';
 }
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
+// ── SETTINGS ──
+async function loadSettings() {
+  try {
+    const accounts = await db('accounts', { select: 'inactive_days,welcome_message,inactive_message,gap_slot_message', filter: `id=eq.${ACCOUNT_ID}` });
+    if (accounts.length) {
+      const a = accounts[0];
+      if (a.inactive_days) document.getElementById('setting-inactive-days').value = a.inactive_days;
+      if (a.welcome_message) document.getElementById('setting-welcome-msg').value = a.welcome_message;
+      if (a.inactive_message) document.getElementById('setting-inactive-msg').value = a.inactive_message;
+      if (a.gap_slot_message) document.getElementById('setting-gap-msg').value = a.gap_slot_message;
+    }
+  } catch (e) {
+    // columns may not exist yet — that's fine
+  }
+}
+
+async function saveSettings() {
+  const btn = document.getElementById('save-settings-btn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    await db('accounts', {
+      method: 'PATCH', filter: `id=eq.${ACCOUNT_ID}`, prefer: 'return=minimal',
+      body: {
+        inactive_days: parseInt(document.getElementById('setting-inactive-days').value) || 35,
+        welcome_message: document.getElementById('setting-welcome-msg').value.trim() || null,
+        inactive_message: document.getElementById('setting-inactive-msg').value.trim() || null,
+        gap_slot_message: document.getElementById('setting-gap-msg').value.trim() || null,
+        updated_at: new Date().toISOString()
+      }
+    });
+    showToast('Settings saved ✓');
+  } catch (e) {
+    showToast('Failed to save: ' + e.message, 'error');
+  } finally {
+    btn.textContent = 'Save Settings';
+    btn.disabled = false;
+  }
+}
+
+// ── INIT ──
 loadHome();
 </script>
 </body>
