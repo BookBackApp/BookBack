@@ -1075,7 +1075,17 @@ async function toggleVip(clientId, makeVip, btn) {
   btn.textContent = 'Saving...';
   btn.disabled = true;
   try {
-    await db('clients', { method: 'PATCH', filter: `id=eq.${clientId}`, prefer: 'return=minimal', body: { hot_list: makeVip, updated_at: new Date().toISOString() } });
+    const token = SESSION_TOKEN || SUPABASE_ANON_KEY;
+    await fetch(`${SUPABASE_URL}/rest/v1/clients?id=eq.${clientId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ hot_list: makeVip, updated_at: new Date().toISOString() })
+    });
     showToast(makeVip ? '⭐ Added to VIP list' : 'Removed from VIP list');
     loadClients();
   } catch (e) {
@@ -1093,7 +1103,17 @@ async function markVisited(clientId, btn) {
   btn.disabled = true;
   try {
     const today = new Date().toISOString().split('T')[0];
-    await db('clients', { method: 'PATCH', filter: `id=eq.${clientId}`, prefer: 'return=minimal', body: { last_visit: today, updated_at: new Date().toISOString() } });
+    const token = SESSION_TOKEN || SUPABASE_ANON_KEY;
+    await fetch(`${SUPABASE_URL}/rest/v1/clients?id=eq.${clientId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ last_visit: today, updated_at: new Date().toISOString() })
+    });
     btn.textContent = '✓ Updated';
     btn.classList.add('done');
     showToast('Last visit updated to today ✓');
