@@ -639,6 +639,10 @@
       </div>
     </div>
     <div id="vip-summary"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <input type="checkbox" id="gap-history-toggle" onchange="loadGapSlots()" style="width:16px;height:16px;accent-color:var(--green);cursor:pointer">
+      <label for="gap-history-toggle" style="font-size:13px;color:var(--muted);cursor:pointer">Show filled slots</label>
+    </div>
     <div class="list" id="gap-list">
       <div class="empty-state">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1157,15 +1161,17 @@ async function addClient() {
 // ── GAP SLOTS ──
 async function loadGapSlots() {
   try {
-    const slots = await db('gap_slots', { select: '*', filter: `account_id=eq.${ACCOUNT_ID}`, order: 'slot_time.desc' });
+    const allSlots = await db('gap_slots', { select: '*', filter: `account_id=eq.${ACCOUNT_ID}`, order: 'slot_time.desc' });
+    const showHistory = document.getElementById('gap-history-toggle')?.checked;
+    const slots = showHistory ? allSlots : allSlots.filter(s => s.status === 'open');
     const el = document.getElementById('gap-list');
     el.innerHTML = slots.length === 0
-      ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No gap slots yet. Add one to text your VIP clients.</p></div>`
+      ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>${showHistory ? 'No gap slots yet.' : 'No open gap slots.'}</p></div>`
       : slots.map(s => gapCardHTML(s)).join('');
 
     // count gap slots this month
     const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
-    const monthSlots = slots.filter(s => s.created_at >= monthStart);
+    const monthSlots = allSlots.filter(s => s.created_at >= monthStart);
     const remaining = GAP_LIMIT - monthSlots.length;
 
     // show VIP clients
@@ -1176,15 +1182,20 @@ async function loadGapSlots() {
       const limitColor = remaining <= 1 ? 'var(--danger)' : remaining <= 2 ? 'var(--warning)' : 'var(--green)';
       vipEl.innerHTML = `
         <div class="stat-card" style="margin-bottom:16px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
             <div class="stat-label">Gap Slots This Month</div>
             <div style="font-size:13px;font-weight:600;color:${limitColor}">${monthSlots.length}/${GAP_LIMIT} used</div>
           </div>
-          <div class="stat-label" style="margin-bottom:8px">VIP Clients (${vipClients.length}/${VIP_LIMIT})</div>
-          ${vipClients.length === 0
-            ? `<div style="font-size:13px;color:var(--muted)">No VIP clients yet — add them from the Clients page</div>`
-            : vipClients.map(v => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${v.first_name} ${v.last_name}</span><span style="color:var(--muted)">${formatDate(v.last_visit)}</span></div>`).join('')
-          }
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;cursor:pointer" onclick="toggleVipList()">
+            <div class="stat-label">VIP Clients (${vipClients.length}/${VIP_LIMIT})</div>
+            <div id="vip-chevron" style="color:var(--muted);font-size:12px;transition:transform 0.2s">▼</div>
+          </div>
+          <div id="vip-list-inner" style="display:none;margin-top:8px">
+            ${vipClients.length === 0
+              ? `<div style="font-size:13px;color:var(--muted);padding:8px 0">No VIP clients yet — add them from the Clients page</div>`
+              : vipClients.map(v => `<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${v.first_name} ${v.last_name}</span><span style="color:var(--muted)">${formatDate(v.last_visit)}</span></div>`).join('')
+            }
+          </div>
         </div>`;
     }
 
@@ -1207,15 +1218,52 @@ async function loadGapSlots() {
   } catch (e) { showToast('Failed: ' + e.message, 'error'); }
 }
 
+function toggleVipList() {
+  const inner = document.getElementById('vip-list-inner');
+  const chevron = document.getElementById('vip-chevron');
+  if (!inner) return;
+  const isOpen = inner.style.display !== 'none';
+  inner.style.display = isOpen ? 'none' : 'block';
+  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
 function gapCardHTML(s) {
+  const isOpen = s.status === 'open';
   return `
-    <div class="gap-card">
-      <div>
-        <div class="gap-time">${formatDateTime(s.slot_time)}</div>
-        <div class="gap-message">${s.message || 'Default gap slot message'}</div>
+    <div class="gap-card" style="flex-direction:column;align-items:flex-start;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%">
+        <div>
+          <div class="gap-time">${formatDateTime(s.slot_time)}</div>
+          <div class="gap-message">${s.message || 'Default gap slot message'}</div>
+        </div>
+        <span class="gap-status ${isOpen ? 'gap-open' : 'gap-filled'}">${isOpen ? 'Open' : 'Filled'}</span>
       </div>
-      <span class="gap-status ${s.status === 'open' ? 'gap-open' : 'gap-filled'}">${s.status === 'open' ? 'Open' : 'Filled'}</span>
+      ${isOpen ? `<button class="btn-visited" style="width:100%;background:#1c3828;color:var(--green);border:1px solid var(--green)" onclick="markSlotFilled('${s.id}', this)">Mark as Filled</button>` : ''}
     </div>`;
+}
+
+async function markSlotFilled(slotId, btn) {
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+  try {
+    const token = SESSION_TOKEN || SUPABASE_ANON_KEY;
+    await fetch(`${SUPABASE_URL}/rest/v1/gap_slots?id=eq.${slotId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ status: 'filled' })
+    });
+    showToast('Gap slot marked as filled ✓');
+    loadGapSlots();
+  } catch (e) {
+    showToast('Failed: ' + e.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Mark as Filled';
+  }
 }
 
 async function addGapSlot() {
