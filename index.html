@@ -502,6 +502,23 @@
 
   .form-textarea:focus { border-color: var(--green); }
 
+  .btn-vip {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-vip:hover { border-color: var(--green); color: var(--green); }
+  .btn-vip-active { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
+  .btn-vip-disabled { opacity: 0.4; cursor: not-allowed !important; }
+
   /* scrollbar */
   * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 </style>
@@ -615,12 +632,13 @@
           <div class="page-title">Gap Slots</div>
           <div class="page-subtitle">Post empty appointment slots</div>
         </div>
-        <button class="btn btn-primary" onclick="openModal('add-gap-modal')">
+        <button class="btn btn-primary" id="gap-add-btn" onclick="openModal('add-gap-modal')">
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add slot
         </button>
       </div>
     </div>
+    <div id="vip-summary"></div>
     <div class="list" id="gap-list">
       <div class="empty-state">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1019,12 +1037,23 @@ function renderClients(clients) {
     : clients.map(c => clientCardHTML(c, true)).join('');
 }
 
+const VIP_LIMIT = 20;
+const GAP_LIMIT = 4;
+
 function clientCardHTML(c, showVisitBtn) {
   const inactive = daysSince(c.last_visit) >= 35;
   const badge = inactive
     ? `<span class="status-badge badge-inactive">Inactive</span>`
     : `<span class="status-badge badge-active">Active</span>`;
   const visitBtn = showVisitBtn ? `<button class="btn-visited" onclick="markVisited('${c.id}', this)">Client Visited Today</button>` : '';
+  const vipCount = allClients.filter(x => x.hot_list).length;
+  const canAddVip = c.hot_list || vipCount < VIP_LIMIT;
+  const vipBtn = showVisitBtn ? (c.hot_list
+    ? `<button class="btn-vip btn-vip-active" onclick="toggleVip('${c.id}', false, this)">⭐ Remove VIP</button>`
+    : canAddVip
+      ? `<button class="btn-vip" onclick="toggleVip('${c.id}', true, this)">Add to VIP</button>`
+      : `<button class="btn-vip btn-vip-disabled" disabled>VIP Limit Reached</button>`
+  ) : '';
 
   return `
     <div class="client-card">
@@ -1034,10 +1063,25 @@ function clientCardHTML(c, showVisitBtn) {
         <div><div class="meta-label">Status</div><div class="meta-value">${badge}</div></div>
         <div><div class="meta-label">Staff</div><div class="meta-value">${STAFF_NAME}</div></div>
         ${c.phone ? `<div><div class="meta-label">Phone</div><div class="meta-value" style="font-family:monospace;font-size:12px">${c.phone}</div></div>` : ''}
-        ${c.hot_list ? `<div><div class="meta-label">VIP</div><div class="meta-value" style="color:var(--green);font-size:12px">⭐ Hot List</div></div>` : ''}
       </div>
-      ${visitBtn}
+      <div style="display:flex;gap:8px;margin-top:4px">
+        ${vipBtn}
+        ${visitBtn}
+      </div>
     </div>`;
+}
+
+async function toggleVip(clientId, makeVip, btn) {
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+  try {
+    await db('clients', { method: 'PATCH', filter: `id=eq.${clientId}`, prefer: 'return=minimal', body: { hot_list: makeVip, updated_at: new Date().toISOString() } });
+    showToast(makeVip ? '⭐ Added to VIP list' : 'Removed from VIP list');
+    loadClients();
+  } catch (e) {
+    showToast('Failed: ' + e.message, 'error');
+    btn.disabled = false;
+  }
 }
 
 function filterClients(q) {
@@ -1098,6 +1142,48 @@ async function loadGapSlots() {
     el.innerHTML = slots.length === 0
       ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No gap slots yet. Add one to text your VIP clients.</p></div>`
       : slots.map(s => gapCardHTML(s)).join('');
+
+    // count gap slots this month
+    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+    const monthSlots = slots.filter(s => s.created_at >= monthStart);
+    const remaining = GAP_LIMIT - monthSlots.length;
+
+    // show VIP clients
+    const vipClients = await db('clients', { select: 'id,first_name,last_name,last_visit', filter: `account_id=eq.${ACCOUNT_ID}&hot_list=eq.true`, order: 'first_name.asc' });
+    
+    const vipEl = document.getElementById('vip-summary');
+    if (vipEl) {
+      const limitColor = remaining <= 1 ? 'var(--danger)' : remaining <= 2 ? 'var(--warning)' : 'var(--green)';
+      vipEl.innerHTML = `
+        <div class="stat-card" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="stat-label">Gap Slots This Month</div>
+            <div style="font-size:13px;font-weight:600;color:${limitColor}">${monthSlots.length}/${GAP_LIMIT} used</div>
+          </div>
+          <div class="stat-label" style="margin-bottom:8px">VIP Clients (${vipClients.length}/${VIP_LIMIT})</div>
+          ${vipClients.length === 0
+            ? `<div style="font-size:13px;color:var(--muted)">No VIP clients yet — add them from the Clients page</div>`
+            : vipClients.map(v => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${v.first_name} ${v.last_name}</span><span style="color:var(--muted)">${formatDate(v.last_visit)}</span></div>`).join('')
+          }
+        </div>`;
+    }
+
+    // disable add button if at limit
+    const addBtn = document.getElementById('gap-add-btn');
+    if (addBtn) {
+      if (monthSlots.length >= GAP_LIMIT) {
+        addBtn.disabled = true;
+        addBtn.textContent = 'Monthly Limit Reached';
+        addBtn.style.opacity = '0.5';
+        addBtn.style.cursor = 'not-allowed';
+      } else {
+        addBtn.disabled = false;
+        addBtn.textContent = '+ Add slot';
+        addBtn.style.opacity = '1';
+        addBtn.style.cursor = 'pointer';
+      }
+    }
+
   } catch (e) { showToast('Failed: ' + e.message, 'error'); }
 }
 
