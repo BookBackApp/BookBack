@@ -31,499 +31,223 @@
     overflow-x: hidden;
   }
 
-  /* ── MOBILE BOTTOM NAV ── */
+  @media (min-width: 600px) {
+    body { background: #0a0b0b; display: flex; justify-content: center; }
+    #app-root { width: 100%; max-width: 480px; background: var(--bg); min-height: 100vh; position: relative; box-shadow: 0 0 60px rgba(0,0,0,0.6); }
+  }
+
+  #app-root { width: 100%; }
+
   .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--sidebar);
-    border-top: 1px solid var(--border);
-    display: flex;
-    z-index: 50;
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: var(--sidebar); border-top: 1px solid var(--border);
+    display: flex; z-index: 50;
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .nav-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 4px 8px;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 10px;
-    font-weight: 600;
-    gap: 4px;
-    transition: color 0.15s;
-    user-select: none;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-  }
-
-  .nav-item svg {
-    width: 22px;
-    height: 22px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 4px 8px; cursor: pointer; color: var(--muted); font-size: 10px; font-weight: 600; gap: 4px; transition: color 0.15s; user-select: none; letter-spacing: 0.3px; text-transform: uppercase; }
+  .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .nav-item.active { color: var(--green); }
 
-  /* ── PAGES ── */
-  .page {
-    display: none;
-    min-height: 100vh;
-    padding-bottom: 80px;
-  }
+  .page { display: none; min-height: 100vh; padding-bottom: 80px; }
   .page.active { display: block; }
 
-  /* ── HEADER BANNER ── */
-  .banner {
-    background: linear-gradient(135deg, #0d2318 0%, #0a1a12 60%, #111212 100%);
-    padding: 20px 16px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .banner-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .logo-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .logo-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-
+  .banner { background: linear-gradient(135deg, #0d2318 0%, #0a1a12 60%, #111212 100%); padding: 20px 16px; border-bottom: 1px solid var(--border); }
+  .banner-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .logo-wrap { display: flex; align-items: center; gap: 8px; }
+  .logo-icon { width: 36px; height: 36px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
   .logo-text { font-size: 15px; font-weight: 700; }
-
-  .user-avatar {
-    width: 32px;
-    height: 32px;
-    background: var(--green);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-    color: #000;
-  }
-
+  .user-avatar { width: 32px; height: 32px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #000; cursor: pointer; }
   .banner-greeting { color: var(--green); font-size: 12px; font-weight: 600; margin-bottom: 2px; }
   .banner-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.2; }
 
-  /* ── CONTENT ── */
   .content { padding: 16px; }
-
-  /* ── PAGE HEADER ── */
   .page-header { margin-bottom: 16px; }
   .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 2px; }
   .page-subtitle { color: var(--muted); font-size: 13px; }
 
-  /* ── STATS ── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-  }
-
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
   .stat-card.full { grid-column: 1 / -1; }
   .stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
   .stat-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
   .stat-value.green { color: var(--green); }
   .stat-value.warning { color: var(--warning); }
 
-  /* ── TABS ── */
-  .tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 16px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .tab {
-    flex-shrink: 0;
-    padding: 10px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--muted);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-  }
-
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tab { flex-shrink: 0; padding: 10px 14px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
   .tab svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .tab.active { color: var(--green); border-bottom-color: var(--green); }
 
-  /* ── SEARCH + TOOLBAR ── */
   .toolbar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
-
   .search-wrap { position: relative; flex: 1; }
-  .search-wrap svg {
-    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-    width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-  }
-
-  .search-input {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px 10px 34px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border 0.15s;
-    -webkit-appearance: none;
-  }
-
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .search-input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px 10px 34px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border 0.15s; -webkit-appearance: none; }
   .search-input:focus { border-color: var(--green); }
   .search-input::placeholder { color: var(--muted); }
 
-  /* ── BUTTONS ── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-    white-space: nowrap;
-    -webkit-appearance: none;
-  }
-
+  .btn { display: inline-flex; align-items: center; gap: 5px; padding: 10px 14px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap; -webkit-appearance: none; }
   .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
   .btn-primary { background: var(--green); color: #000; }
   .btn-primary:active { background: var(--green-dim); }
   .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+  .btn-danger:active { background: var(--danger); color: #fff; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-icon { padding: 10px; border-radius: 10px; background: var(--green); color: #000; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .btn-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ── CLIENT CARDS ── */
   .list { display: flex; flex-direction: column; gap: 8px; }
-
-  .client-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-  }
-
+  .client-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
   .client-name { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
-
-  .client-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
+  .client-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
   .meta-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
   .meta-value { font-size: 13px; font-weight: 500; }
 
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-  }
-
+  .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
   .status-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
   .badge-active { background: rgba(0,230,118,0.12); color: var(--green); }
   .badge-inactive { background: rgba(255,82,82,0.12); color: var(--danger); }
 
-  .btn-visited {
-    width: 100%;
-    background: var(--green);
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
+  .btn-visited { width: 100%; background: var(--green); color: #000; border: none; border-radius: 8px; padding: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
   .btn-visited:active { background: var(--green-dim); }
   .btn-visited.done { background: #1c3828; color: var(--green); }
 
-  /* ── GAP SLOT CARDS ── */
-  .gap-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
+  .btn-vip { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 8px 12px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .btn-vip-active { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
+  .btn-vip-disabled { opacity: 0.4; cursor: not-allowed !important; }
 
+  .btn-delete { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 8px 10px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .btn-delete:active { border-color: var(--danger); color: var(--danger); background: rgba(255,82,82,0.08); }
+  .btn-delete svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .gap-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
   .gap-time { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
   .gap-message { font-size: 12px; color: var(--muted); }
   .gap-status { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; }
   .gap-open { background: rgba(0,230,118,0.12); color: var(--green); }
   .gap-filled { background: rgba(138,143,143,0.15); color: var(--muted); }
 
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    text-align: center;
-    padding: 48px 20px;
-    color: var(--muted);
-  }
-
-  .empty-state svg {
-    width: 44px; height: 44px;
-    stroke: var(--border); fill: none;
-    stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
-    margin-bottom: 12px;
-  }
-
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
+  .empty-state svg { width: 44px; height: 44px; stroke: var(--border); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; }
   .empty-state p { font-size: 14px; }
 
-  /* ── MODAL ── */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 100;
-    align-items: flex-end;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-  }
-
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
   .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px 20px 0 0;
-    padding: 20px 16px;
-    padding-bottom: calc(20px + env(safe-area-inset-bottom));
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  .modal-handle {
-    width: 36px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 0 auto 20px;
-  }
-
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px 20px 0 0; padding: 20px 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+  .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
   .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
 
-  /* ── FORM ── */
+  .delete-modal-body { text-align: center; padding: 8px 0 4px; }
+  .delete-icon { width: 52px; height: 52px; background: rgba(255,82,82,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .delete-icon svg { width: 24px; height: 24px; stroke: var(--danger); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .delete-client-name { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .delete-warning { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
   .form-group { margin-bottom: 16px; }
   .form-label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
-
-  .form-input {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    outline: none;
-    transition: border 0.15s;
-    -webkit-appearance: none;
-  }
-
+  .form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; transition: border 0.15s; -webkit-appearance: none; }
   .form-input:focus { border-color: var(--green); }
   .form-input::placeholder { color: var(--muted); }
-
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
   .form-actions { display: flex; gap: 10px; margin-top: 20px; }
   .form-actions .btn { flex: 1; justify-content: center; padding: 13px; }
+  .form-textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border 0.15s; -webkit-appearance: none; resize: vertical; min-height: 80px; line-height: 1.5; }
+  .form-textarea:focus { border-color: var(--green); }
+  .phone-preview { font-size: 12px; color: var(--green); margin-top: 5px; display: none; }
 
-  /* ── TOAST ── */
-  .toast {
-    position: fixed;
-    bottom: 90px;
-    left: 16px;
-    right: 16px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 200;
-    transform: translateY(20px);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    text-align: center;
-  }
-
-  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); width: calc(100% - 32px); max-width: 448px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; font-weight: 500; z-index: 200; opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); text-align: center; }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   .toast.success { border-color: var(--green); color: var(--green); }
   .toast.error { border-color: var(--danger); color: var(--danger); }
 
-  /* ── IMPORT ── */
-  .import-zone {
-    border: 2px dashed var(--border);
-    border-radius: 14px;
-    padding: 36px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.15s;
-    margin-bottom: 16px;
-  }
-
+  .import-zone { border: 2px dashed var(--border); border-radius: 14px; padding: 36px 20px; text-align: center; cursor: pointer; transition: all 0.15s; margin-bottom: 16px; }
   .import-zone:active { border-color: var(--green); background: rgba(0,230,118,0.04); }
   .import-zone svg { width: 40px; height: 40px; stroke: var(--muted); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; }
   .import-zone p { color: var(--muted); font-size: 14px; line-height: 1.5; }
-
-  .import-note {
-    background: rgba(0,230,118,0.06);
-    border: 1px solid rgba(0,230,118,0.2);
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 16px;
-    line-height: 1.5;
-  }
-
+  .import-note { background: rgba(0,230,118,0.06); border: 1px solid rgba(0,230,118,0.2); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
   .import-note strong { color: var(--green); }
-
-  .import-preview-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 14px;
-  }
-
-  .import-preview-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
-
+  .import-preview-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+  .import-preview-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 13px; }
   .import-preview-row:last-child { border-bottom: none; }
   .import-preview-name { font-weight: 600; }
   .import-preview-phone { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; }
 
-  /* ── SETTINGS ── */
-  .settings-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-
-  .settings-section-title {
-    padding: 12px 14px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-  }
-
-  .settings-item {
-    padding: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-
+  .settings-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+  .settings-section-title { padding: 12px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 1px solid var(--border); background: var(--bg); }
+  .settings-item { padding: 14px; border-bottom: 1px solid var(--border); }
   .settings-item:last-child { border-bottom: none; }
   .settings-item-label { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
   .settings-item-desc { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
 
-  .form-textarea {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border 0.15s;
-    -webkit-appearance: none;
-    resize: vertical;
-    min-height: 80px;
-    line-height: 1.5;
-  }
+  .auth-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 300; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+  .auth-screen.active { display: flex; }
+  .auth-box { width: 100%; max-width: 360px; }
+  .auth-logo { text-align: center; margin-bottom: 32px; }
+  .auth-logo-title { font-size: 24px; font-weight: 700; letter-spacing: -0.4px; margin-top: 12px; }
+  .auth-logo-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+  .auth-tabs { display: flex; background: var(--card); border-radius: 10px; padding: 3px; margin-bottom: 24px; border: 1px solid var(--border); }
+  .auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 8px; color: var(--muted); transition: all 0.15s; }
+  .auth-tab.active { background: var(--green); color: #000; }
+  .auth-error { background: rgba(255,82,82,0.1); border: 1px solid rgba(255,82,82,0.3); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--danger); margin-bottom: 14px; display: none; text-align: center; }
+  .auth-success { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--green); margin-bottom: 14px; display: none; text-align: center; }
+  .auth-link { color: var(--green); cursor: pointer; font-size: 13px; text-align: center; display: block; margin-top: 14px; }
 
-  .form-textarea:focus { border-color: var(--green); }
-
-  .btn-vip {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .btn-vip:hover { border-color: var(--green); color: var(--green); }
-  .btn-vip-active { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
-  .btn-vip-disabled { opacity: 0.4; cursor: not-allowed !important; }
-
-  /* scrollbar */
   * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 </style>
 </head>
 <body>
+
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="56" height="56" style="display:block;margin:0 auto">
+        <rect width="100" height="100" rx="18" fill="#1a1a1a"/>
+        <g fill="none" stroke="#00E676" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M38 25 L38 75"/><path d="M38 25 L55 25 Q70 25 70 40 Q70 50 55 50 L38 50"/>
+          <path d="M38 50 L57 50 Q72 50 72 62 Q72 75 57 75 L38 75"/>
+          <path d="M28 38 L20 46 L28 54"/><path d="M20 46 L34 46"/>
+        </g>
+      </svg>
+      <div class="auth-logo-title">BookBack</div>
+      <div class="auth-logo-sub" id="auth-subtitle">Sign in to your account</div>
+    </div>
+    <div class="auth-tabs" id="auth-tabs">
+      <div class="auth-tab active" onclick="switchAuthTab('login')">Log In</div>
+      <div class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</div>
+    </div>
+    <div id="auth-error" class="auth-error"></div>
+    <div id="auth-success" class="auth-success"></div>
+    <!-- LOGIN -->
+    <div id="auth-login">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="login-email" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')loginUser()"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')loginUser()"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="loginUser()" id="login-btn">Log In</button>
+      <a class="auth-link" onclick="switchAuthTab('forgot')">Forgot password?</a>
+    </div>
+    <!-- SIGN UP -->
+    <div id="auth-signup" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Your Name</label><input class="form-input" type="text" id="signup-name" placeholder="Mason"></div>
+        <div class="form-group"><label class="form-label">Business Name</label><input class="form-input" type="text" id="signup-business" placeholder="Unorthodox Barbers"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="signup-email" placeholder="you@example.com"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="signup-password" placeholder="Min 6 characters"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="signupUser()" id="signup-btn">Create Account</button>
+    </div>
+    <!-- FORGOT -->
+    <div id="auth-forgot" style="display:none">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="forgot-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')forgotPassword()"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="forgotPassword()" id="forgot-btn">Send Reset Link</button>
+      <a class="auth-link" onclick="switchAuthTab('login')">Back to log in</a>
+    </div>
+  </div>
+</div>
+
+<!-- APP ROOT -->
+<div id="app-root">
 
 <!-- HOME PAGE -->
 <div class="page active" id="page-home">
@@ -534,92 +258,43 @@
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
             <rect width="100" height="100" rx="18" fill="#1a1a1a"/>
             <g fill="none" stroke="#00E676" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
-              <!-- B shape -->
-              <path d="M38 25 L38 75"/>
-              <path d="M38 25 L55 25 Q70 25 70 40 Q70 50 55 50 L38 50"/>
+              <path d="M38 25 L38 75"/><path d="M38 25 L55 25 Q70 25 70 40 Q70 50 55 50 L38 50"/>
               <path d="M38 50 L57 50 Q72 50 72 62 Q72 75 57 75 L38 75"/>
-              <!-- back arrow / return mark -->
-              <path d="M28 38 L20 46 L28 54"/>
-              <path d="M20 46 L34 46"/>
+              <path d="M28 38 L20 46 L28 54"/><path d="M20 46 L34 46"/>
             </g>
           </svg>
         </div>
         <span class="logo-text">BookBack</span>
       </div>
-      <div class="user-avatar">M</div>
+      <div class="user-avatar" id="user-avatar" onclick="logoutUser()" title="Tap to log out">M</div>
     </div>
-    <div class="banner-greeting">Hey, Mason 👋</div>
+    <div class="banner-greeting" id="home-greeting">Hey 👋</div>
     <div class="banner-title">Keep clients coming back.</div>
   </div>
   <div class="content">
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-label">Total Clients</div>
-        <div class="stat-value green" id="stat-total">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Inactive</div>
-        <div class="stat-value warning" id="stat-inactive">—</div>
-      </div>
-      <div class="stat-card full">
-        <div class="stat-label">Texts Sent This Month</div>
-        <div class="stat-value" id="stat-texts">—</div>
-      </div>
+      <div class="stat-card"><div class="stat-label">Total Clients</div><div class="stat-value green" id="stat-total">—</div></div>
+      <div class="stat-card"><div class="stat-label">Inactive</div><div class="stat-value warning" id="stat-inactive">—</div></div>
+      <div class="stat-card full"><div class="stat-label">Texts Sent This Month</div><div class="stat-value" id="stat-texts">—</div></div>
     </div>
-
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('inactive', this)">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-        Inactive Clients
-      </div>
-      <div class="tab" onclick="switchTab('slots', this)">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Open Gap Slots
-      </div>
+      <div class="tab active" onclick="switchTab('inactive', this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Inactive Clients</div>
+      <div class="tab" onclick="switchTab('slots', this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Open Gap Slots</div>
     </div>
-
-    <div id="tab-inactive">
-      <div class="list" id="home-inactive-list">
-        <div class="empty-state">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          <p>Loading...</p>
-        </div>
-      </div>
-    </div>
-
-    <div id="tab-slots" style="display:none">
-      <div class="list" id="home-gap-list">
-        <div class="empty-state">
-          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <p>Loading...</p>
-        </div>
-      </div>
-    </div>
+    <div id="tab-inactive"><div class="list" id="home-inactive-list"><div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>Loading...</p></div></div></div>
+    <div id="tab-slots" style="display:none"><div class="list" id="home-gap-list"><div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>Loading...</p></div></div></div>
   </div>
 </div>
 
 <!-- CLIENTS PAGE -->
 <div class="page" id="page-clients">
   <div class="content">
-    <div class="page-header">
-      <div class="page-title">Clients</div>
-      <div class="page-subtitle">Search and manage your client list</div>
-    </div>
+    <div class="page-header"><div class="page-title">Clients</div><div class="page-subtitle">Search and manage your client list</div></div>
     <div class="toolbar">
-      <div class="search-wrap">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input class="search-input" type="text" placeholder="Search clients..." oninput="filterClients(this.value)">
-      </div>
-      <button class="btn-icon" onclick="openModal('add-client-modal')">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </button>
+      <div class="search-wrap"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="search-input" type="text" placeholder="Search clients..." oninput="filterClients(this.value)"></div>
+      <button class="btn-icon" onclick="openModal('add-client-modal')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
     </div>
-    <div class="list" id="clients-list">
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-        <p>Loading clients...</p>
-      </div>
-    </div>
+    <div class="list" id="clients-list"><div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>Loading clients...</p></div></div>
   </div>
 </div>
 
@@ -628,14 +303,8 @@
   <div class="content">
     <div class="page-header">
       <div style="display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div class="page-title">Gap Slots</div>
-          <div class="page-subtitle">Post empty appointment slots</div>
-        </div>
-        <button class="btn btn-primary" id="gap-add-btn" onclick="openModal('add-gap-modal')">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add slot
-        </button>
+        <div><div class="page-title">Gap Slots</div><div class="page-subtitle">Post empty appointment slots</div></div>
+        <button class="btn btn-primary" id="gap-add-btn" onclick="openModal('add-gap-modal')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add slot</button>
       </div>
     </div>
     <div id="vip-summary"></div>
@@ -643,47 +312,28 @@
       <input type="checkbox" id="gap-history-toggle" onchange="loadGapSlots()" style="width:16px;height:16px;accent-color:var(--green);cursor:pointer">
       <label for="gap-history-toggle" style="font-size:13px;color:var(--muted);cursor:pointer">Show filled slots</label>
     </div>
-    <div class="list" id="gap-list">
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <p>Loading gap slots...</p>
-      </div>
-    </div>
+    <div class="list" id="gap-list"><div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>Loading gap slots...</p></div></div>
   </div>
 </div>
 
 <!-- IMPORT PAGE -->
 <div class="page" id="page-import">
   <div class="content">
-    <div class="page-header">
-      <div class="page-title">Import Clients</div>
-      <div class="page-subtitle">Upload a CSV from Booksy, Fresha or Square</div>
-    </div>
-
-    <div class="import-note">
-      <strong>No welcome texts will fire</strong> for imported clients. Only manually added clients trigger the welcome automation.
-    </div>
-
+    <div class="page-header"><div class="page-title">Import Clients</div><div class="page-subtitle">Upload a CSV from Booksy, Fresha or Square</div></div>
+    <div class="import-note"><strong>No welcome texts will fire</strong> for imported clients. Only manually added clients trigger the welcome automation.</div>
     <div class="import-zone" id="import-zone" onclick="document.getElementById('csv-file').click()">
       <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
       <p><strong style="color:var(--text)">Tap to upload CSV</strong><br>Booksy, Fresha, Square supported</p>
     </div>
     <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="handleFileSelect(event)">
-
     <div id="import-preview" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div>
-          <div style="font-size:15px;font-weight:600" id="import-filename"></div>
-          <div style="font-size:13px;color:var(--muted)" id="import-count"></div>
-        </div>
+        <div><div style="font-size:15px;font-weight:600" id="import-filename"></div><div style="font-size:13px;color:var(--muted)" id="import-count"></div></div>
         <button class="btn btn-secondary" onclick="cancelImport()">Cancel</button>
       </div>
       <div class="import-preview-card" id="import-preview-list"></div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="confirmImport()" id="import-btn">
-        Import Clients
-      </button>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="confirmImport()" id="import-btn">Import Clients</button>
     </div>
-
     <div id="import-result" style="display:none">
       <div class="stat-card">
         <div class="stat-label">Import Complete</div>
@@ -697,11 +347,7 @@
 <!-- SETTINGS PAGE -->
 <div class="page" id="page-settings">
   <div class="content">
-    <div class="page-header">
-      <div class="page-title">Settings</div>
-      <div class="page-subtitle">Customise your messages and rules</div>
-    </div>
-
+    <div class="page-header"><div class="page-title">Settings</div><div class="page-subtitle">Customise your messages and rules</div></div>
     <div class="settings-section">
       <div class="settings-section-title">Inactivity Rules</div>
       <div class="settings-item">
@@ -710,7 +356,6 @@
         <input class="form-input" type="number" id="setting-inactive-days" placeholder="35" min="7" max="365">
       </div>
     </div>
-
     <div class="settings-section">
       <div class="settings-section-title">SMS Messages</div>
       <div class="settings-item">
@@ -725,72 +370,27 @@
       </div>
       <div class="settings-item">
         <div class="settings-item-label">Gap Slot Text</div>
-        <div class="settings-item-desc">Sent to VIP hot list clients when a gap slot is posted. Use {first_name}, {shop_name}, {slot_time}.</div>
+        <div class="settings-item-desc">Sent to VIP clients when a gap slot is posted. Use {first_name}, {shop_name}, {slot_time}.</div>
         <textarea class="form-textarea" id="setting-gap-msg" placeholder="Last minute slot available {slot_time} at {shop_name}!..."></textarea>
       </div>
     </div>
-
-    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="saveSettings()" id="save-settings-btn">
-      Save Settings
-    </button>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="saveSettings()" id="save-settings-btn">Save Settings</button>
+    <div style="margin-top:12px">
+      <button class="btn btn-secondary" style="width:100%;justify-content:center" onclick="logoutUser()">Log Out</button>
+    </div>
   </div>
 </div>
 
 <!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <div class="nav-item active" id="nav-home" onclick="navigate('home', this)">
-    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    Home
-  </div>
-  <div class="nav-item" id="nav-clients" onclick="navigate('clients', this)">
-    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-    Clients
-  </div>
-  <div class="nav-item" id="nav-gapslots" onclick="navigate('gapslots', this)">
-    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-    Gap Slots
-  </div>
-  <div class="nav-item" id="nav-import" onclick="navigate('import', this)">
-    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-    Import
-  </div>
-  <div class="nav-item" id="nav-settings" onclick="navigate('settings', this)">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-    Settings
-  </div>
+<nav class="bottom-nav" id="bottom-nav" style="display:none">
+  <div class="nav-item active" id="nav-home" onclick="navigate('home', this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+  <div class="nav-item" id="nav-clients" onclick="navigate('clients', this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Clients</div>
+  <div class="nav-item" id="nav-gapslots" onclick="navigate('gapslots', this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Gap Slots</div>
+  <div class="nav-item" id="nav-import" onclick="navigate('import', this)"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import</div>
+  <div class="nav-item" id="nav-settings" onclick="navigate('settings', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</div>
 </nav>
 
-<!-- LOGIN PAGE -->
-<div id="login-page" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:24px;">
-  <div style="width:100%;max-width:360px;">
-    <div style="text-align:center;margin-bottom:40px;">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="64" height="64" style="margin:0 auto 16px;display:block;">
-        <rect width="100" height="100" rx="18" fill="#1a1a1a"/>
-        <g fill="none" stroke="#00E676" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M38 25 L38 75"/>
-          <path d="M38 25 L55 25 Q70 25 70 40 Q70 50 55 50 L38 50"/>
-          <path d="M38 50 L57 50 Q72 50 72 62 Q72 75 57 75 L38 75"/>
-          <path d="M28 38 L20 46 L28 54"/>
-          <path d="M20 46 L34 46"/>
-        </g>
-      </svg>
-      <div style="font-size:24px;font-weight:700;letter-spacing:-0.4px;">BookBack</div>
-      <div style="font-size:14px;color:var(--muted);margin-top:6px;">Sign in to your account</div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Email</label>
-      <input class="form-input" type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Password</label>
-      <input class="form-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <div id="login-error" style="color:var(--danger);font-size:13px;margin-bottom:12px;display:none;text-align:center;"></div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px;" onclick="signIn()" id="login-btn">
-      Sign In
-    </button>
-  </div>
-</div>
+</div><!-- end app-root -->
 
 <!-- ADD CLIENT MODAL -->
 <div class="modal-overlay" id="add-client-modal">
@@ -798,23 +398,15 @@
     <div class="modal-handle"></div>
     <div class="modal-title">Add New Client</div>
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">First Name</label>
-        <input class="form-input" type="text" id="client-firstname" placeholder="James">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Last Name</label>
-        <input class="form-input" type="text" id="client-lastname" placeholder="Sharland">
-      </div>
+      <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" id="client-firstname" placeholder="First name" autocomplete="off"></div>
+      <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" id="client-lastname" placeholder="Last name" autocomplete="off"></div>
     </div>
     <div class="form-group">
       <label class="form-label">Phone Number</label>
-      <input class="form-input" type="tel" id="client-phone" placeholder="07700 900000">
+      <input class="form-input" type="tel" id="client-phone" placeholder="07700 000000" oninput="previewPhoneNorm(this)">
+      <div class="phone-preview" id="phone-norm-preview"></div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Last Visit Date</label>
-      <input class="form-input" type="date" id="client-lastvisit">
-    </div>
+    <div class="form-group"><label class="form-label">Last Visit Date</label><input class="form-input" type="date" id="client-lastvisit"></div>
     <div class="form-actions">
       <button class="btn btn-secondary" onclick="closeModal('add-client-modal')">Cancel</button>
       <button class="btn btn-primary" onclick="addClient()" id="add-client-btn">Add Client</button>
@@ -827,10 +419,7 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Add Gap Slot</div>
-    <div class="form-group">
-      <label class="form-label">Date & Time</label>
-      <input class="form-input" type="datetime-local" id="gap-datetime">
-    </div>
+    <div class="form-group"><label class="form-label">Date & Time</label><input class="form-input" type="datetime-local" id="gap-datetime"></div>
     <div class="form-group">
       <label class="form-label">Custom Message (optional)</label>
       <input class="form-input" type="text" id="gap-message" placeholder="e.g. Cancellation available 2pm!">
@@ -843,71 +432,192 @@
   </div>
 </div>
 
+<!-- DELETE CLIENT MODAL -->
+<div class="modal-overlay" id="delete-client-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="delete-modal-body">
+      <div class="delete-icon"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
+      <div class="delete-client-name" id="delete-client-name"></div>
+      <div class="delete-warning">This will permanently delete this client and all their data. This cannot be undone.</div>
+    </div>
+    <div class="form-actions" style="margin-top:24px">
+      <button class="btn btn-secondary" onclick="closeModal('delete-client-modal')">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDeleteClient()" id="confirm-delete-btn">Delete Client</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
 const SUPABASE_URL = 'https://lirxjznkpfdzsbphmmoj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpcnhqem5rcGZkenNicGhtbW9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNTI2NzcsImV4cCI6MjA5MjYyODY3N30.fBFLKnqvXkj37mlpoIa07IMruqZMHkex5xtnrW1aXXM';
-const ACCOUNT_ID = 'cba3ee8d-b939-48e3-b12c-aedcd72667a6';
-let SESSION_TOKEN = null;
+const VIP_LIMIT = 20;
+const GAP_LIMIT = 4;
 
-// ── AUTH ──
-async function signIn() {
+let currentSession = null;
+let currentAccountId = null;
+let currentStaffName = 'there';
+let allClients = [];
+let clientToDelete = null;
+
+// ═══════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════
+async function initAuth() {
+  const stored = localStorage.getItem('bb_session');
+  if (stored) {
+    try {
+      const session = JSON.parse(stored);
+      const refreshed = await refreshSession(session.refresh_token);
+      if (refreshed) { await startApp(refreshed); return; }
+    } catch(e) { localStorage.removeItem('bb_session'); }
+  }
+  showAuth();
+}
+
+async function refreshSession(token) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: token })
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.access_token) { localStorage.setItem('bb_session', JSON.stringify(data)); return data; }
+    return null;
+  } catch(e) { return null; }
+}
+
+function showAuth() {
+  document.getElementById('auth-screen').classList.add('active');
+  document.getElementById('bottom-nav').style.display = 'none';
+}
+
+async function startApp(session) {
+  currentSession = session;
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('bottom-nav').style.display = 'flex';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/accounts?user_id=eq.${session.user.id}&select=id,staff_name,business_name`, {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${session.access_token}` }
+    });
+    const accounts = await res.json();
+    if (accounts && accounts.length > 0) {
+      currentAccountId = accounts[0].id;
+      currentStaffName = accounts[0].staff_name || 'there';
+      document.getElementById('user-avatar').textContent = currentStaffName.charAt(0).toUpperCase();
+      document.getElementById('home-greeting').textContent = `Hey, ${currentStaffName} 👋`;
+    }
+  } catch(e) { console.error('Account load failed', e); }
+  loadHome();
+}
+
+async function loginUser() {
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
+  if (!email || !password) { showAuthError('Please enter your email and password'); return; }
   const btn = document.getElementById('login-btn');
-  const errEl = document.getElementById('login-error');
-  if (!email || !password) { showLoginError('Please enter your email and password'); return; }
-  btn.textContent = 'Signing in...';
-  btn.disabled = true;
-  errEl.style.display = 'none';
+  btn.textContent = 'Logging in...'; btn.disabled = true; clearAuthMessages();
   try {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
-      method: 'POST',
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error_description || data.msg || 'Login failed');
-    SESSION_TOKEN = data.access_token;
-    localStorage.setItem('bb_token', SESSION_TOKEN);
-    localStorage.setItem('bb_token_exp', Date.now() + (data.expires_in * 1000));
-    showApp();
-    loadHome();
-  } catch (e) {
-    showLoginError(e.message);
-  } finally {
-    btn.textContent = 'Sign In';
-    btn.disabled = false;
+    localStorage.setItem('bb_session', JSON.stringify(data));
+    await startApp(data);
+  } catch(e) { showAuthError(e.message); }
+  finally { btn.textContent = 'Log In'; btn.disabled = false; }
+}
+
+async function signupUser() {
+  const name = document.getElementById('signup-name').value.trim();
+  const business = document.getElementById('signup-business').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  if (!name || !email || !password) { showAuthError('Please fill in all fields'); return; }
+  if (password.length < 6) { showAuthError('Password must be at least 6 characters'); return; }
+  const btn = document.getElementById('signup-btn');
+  btn.textContent = 'Creating account...'; btn.disabled = true; clearAuthMessages();
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+      method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.msg || 'Signup failed');
+    if (data.access_token) {
+      await fetch(`${SUPABASE_URL}/rest/v1/accounts`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${data.access_token}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ user_id: data.user.id, email, staff_name: name, business_name: business || name + "'s Business", plan: 'trial', subscription_status: 'trialing', created_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      });
+      localStorage.setItem('bb_session', JSON.stringify(data));
+      await startApp(data);
+    } else {
+      showAuthSuccess('Account created! Check your email to confirm, then log in.');
+      switchAuthTab('login');
+    }
+  } catch(e) { showAuthError(e.message); }
+  finally { btn.textContent = 'Create Account'; btn.disabled = false; }
+}
+
+async function forgotPassword() {
+  const email = document.getElementById('forgot-email').value.trim();
+  if (!email) { showAuthError('Please enter your email address'); return; }
+  const btn = document.getElementById('forgot-btn');
+  btn.textContent = 'Sending...'; btn.disabled = true; clearAuthMessages();
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+      method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    if (!res.ok) throw new Error('Failed to send reset email');
+    showAuthSuccess('Reset link sent! Check your email.');
+    document.getElementById('forgot-email').value = '';
+  } catch(e) { showAuthError(e.message); }
+  finally { btn.textContent = 'Send Reset Link'; btn.disabled = false; }
+}
+
+function logoutUser() {
+  if (!confirm('Log out of BookBack?')) return;
+  localStorage.removeItem('bb_session');
+  currentSession = null; currentAccountId = null;
+  showAuth();
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+}
+
+function switchAuthTab(tab) {
+  clearAuthMessages();
+  ['auth-login','auth-signup','auth-forgot'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('auth-tabs').style.display = tab === 'forgot' ? 'none' : 'flex';
+  const subs = { login: 'Sign in to your account', signup: 'Start your 14-day free trial', forgot: 'Reset your password' };
+  document.getElementById('auth-subtitle').textContent = subs[tab] || '';
+  if (tab === 'login') {
+    document.getElementById('auth-login').style.display = 'block';
+    document.querySelectorAll('.auth-tab')[0].classList.add('active');
+    document.querySelectorAll('.auth-tab')[1].classList.remove('active');
+  } else if (tab === 'signup') {
+    document.getElementById('auth-signup').style.display = 'block';
+    document.querySelectorAll('.auth-tab')[0].classList.remove('active');
+    document.querySelectorAll('.auth-tab')[1].classList.add('active');
+  } else {
+    document.getElementById('auth-forgot').style.display = 'block';
   }
 }
 
-function showLoginError(msg) {
-  const el = document.getElementById('login-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
+function showAuthError(msg) { const e = document.getElementById('auth-error'); e.textContent = msg; e.style.display = 'block'; document.getElementById('auth-success').style.display = 'none'; }
+function showAuthSuccess(msg) { const e = document.getElementById('auth-success'); e.textContent = msg; e.style.display = 'block'; document.getElementById('auth-error').style.display = 'none'; }
+function clearAuthMessages() { document.getElementById('auth-error').style.display = 'none'; document.getElementById('auth-success').style.display = 'none'; }
 
-function showApp() {
-  document.getElementById('login-page').style.display = 'none';
-  document.querySelector('.bottom-nav').style.display = 'flex';
-}
-
-function showLogin() {
-  document.getElementById('login-page').style.display = 'flex';
-  document.querySelector('.bottom-nav').style.display = 'none';
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-}
-
-function signOut() {
-  SESSION_TOKEN = null;
-  localStorage.removeItem('bb_token');
-  localStorage.removeItem('bb_token_exp');
-  showLogin();
-}
-
-// ── SUPABASE HELPER ──
+// ═══════════════════════════════════════
+// SUPABASE HELPER
+// ═══════════════════════════════════════
 async function db(table, options = {}) {
   let url = `${SUPABASE_URL}/rest/v1/${table}`;
   const params = [];
@@ -916,29 +626,19 @@ async function db(table, options = {}) {
   if (options.order) params.push(`order=${options.order}`);
   if (options.limit) params.push(`limit=${options.limit}`);
   if (params.length) url += '?' + params.join('&');
-
-  const token = SESSION_TOKEN || SUPABASE_ANON_KEY;
-
+  const token = currentSession ? currentSession.access_token : SUPABASE_ANON_KEY;
   const res = await fetch(url, {
     method: options.method || 'GET',
-    headers: {
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'Prefer': options.prefer || 'return=representation'
-    },
+    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Prefer': options.prefer || 'return=representation' },
     body: options.body ? JSON.stringify(options.body) : undefined
   });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || 'Request failed');
-  }
-
+  if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.message || 'Request failed'); }
   return options.method === 'DELETE' ? null : res.json();
 }
 
-// ── NAVIGATION ──
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
 function navigate(page, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -958,80 +658,75 @@ function switchTab(tab, el) {
   document.getElementById('tab-slots').style.display = tab === 'slots' ? 'block' : 'none';
 }
 
-// ── MODALS ──
 function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) { m.classList.remove('open'); document.body.style.overflow = ''; } });
 });
 
-// ── TOAST ──
 function showToast(msg, type = 'success') {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast ${type} show`;
+  t.textContent = msg; t.className = `toast ${type} show`;
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// ── HELPERS ──
-function formatDate(d) {
-  if (!d) return '—';
-  return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+function formatDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
+function formatDateTime(d) { if (!d) return '—'; return new Date(d).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+function daysSince(d) { if (!d) return 999; return Math.floor((Date.now() - new Date(d)) / 86400000); }
+function escapeAttr(s) { return (s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+// ═══════════════════════════════════════
+// PHONE NORMALISATION
+// ═══════════════════════════════════════
+function normalisePhone(raw) {
+  let p = raw.replace(/[\s\-().]/g, '');
+  if (p.startsWith('07') && p.length === 11) return '+44' + p.slice(1);
+  if (p.startsWith('447') && p.length === 12) return '+' + p;
+  if (p.startsWith('+44')) return p;
+  return p;
 }
 
-function formatDateTime(d) {
-  if (!d) return '—';
-  return new Date(d).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+function previewPhoneNorm(input) {
+  const raw = input.value.trim();
+  const preview = document.getElementById('phone-norm-preview');
+  if (!raw) { preview.style.display = 'none'; return; }
+  const normalised = normalisePhone(raw);
+  if (normalised !== raw.replace(/[\s\-().]/g, '')) { preview.textContent = `Will be saved as: ${normalised}`; preview.style.display = 'block'; }
+  else { preview.style.display = 'none'; }
 }
 
-function daysSince(d) {
-  if (!d) return 999;
-  return Math.floor((Date.now() - new Date(d)) / 86400000);
-}
-
-// ── HOME ──
-let STAFF_NAME = 'Mason';
-
+// ═══════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════
 async function loadHome() {
-  // fetch staff name from account
+  if (!currentAccountId) return;
   try {
-    const accs = await db('accounts', { select: 'staff_name', filter: `id=eq.${ACCOUNT_ID}` });
-    if (accs.length && accs[0].staff_name) STAFF_NAME = accs[0].staff_name;
-  } catch(e) {}
-  try {
-    const clients = await db('clients', { select: 'id,first_name,last_name,last_visit,status', filter: `account_id=eq.${ACCOUNT_ID}` });
+    const clients = await db('clients', { select: 'id,first_name,last_name,last_visit,status', filter: `account_id=eq.${currentAccountId}` });
     document.getElementById('stat-total').textContent = clients.length;
-    const inactive = clients.filter(c => daysSince(c.last_visit) >= 35);
+    const inactive = clients.filter(c => daysSince(c.last_visit) >= 35 && c.status !== 'opted_out');
     document.getElementById('stat-inactive').textContent = inactive.length;
-
     const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
-    const msgs = await db('messages', { select: 'id', filter: `account_id=eq.${ACCOUNT_ID}&status=eq.sent&created_at=gte.${monthStart}` });
+    const msgs = await db('messages', { select: 'id', filter: `account_id=eq.${currentAccountId}&status=eq.sent&created_at=gte.${monthStart}` });
     document.getElementById('stat-texts').textContent = msgs.length;
-
-    const inactiveList = document.getElementById('home-inactive-list');
-    if (inactive.length === 0) {
-      inactiveList.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>No inactive clients right now 🎉</p></div>`;
-    } else {
-      inactiveList.innerHTML = inactive.map(c => clientCardHTML(c, false)).join('');
-    }
-
-    const slots = await db('gap_slots', { select: '*', filter: `account_id=eq.${ACCOUNT_ID}&status=eq.open`, order: 'slot_time.asc' });
-    const gapList = document.getElementById('home-gap-list');
-    gapList.innerHTML = slots.length === 0
+    document.getElementById('home-inactive-list').innerHTML = inactive.length === 0
+      ? `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>No inactive clients right now 🎉</p></div>`
+      : inactive.map(c => clientCardHTML(c, false)).join('');
+    const slots = await db('gap_slots', { select: '*', filter: `account_id=eq.${currentAccountId}&status=eq.open`, order: 'slot_time.asc' });
+    document.getElementById('home-gap-list').innerHTML = slots.length === 0
       ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No open gap slots</p></div>`
       : slots.map(s => gapCardHTML(s)).join('');
-
-  } catch (e) { showToast('Failed to load: ' + e.message, 'error'); }
+  } catch(e) { showToast('Failed to load: ' + e.message, 'error'); }
 }
 
-// ── CLIENTS ──
-let allClients = [];
-
+// ═══════════════════════════════════════
+// CLIENTS
+// ═══════════════════════════════════════
 async function loadClients() {
+  if (!currentAccountId) return;
   try {
-    allClients = await db('clients', { select: 'id,first_name,last_name,phone,last_visit,status,hot_list', filter: `account_id=eq.${ACCOUNT_ID}`, order: 'first_name.asc' });
+    allClients = await db('clients', { select: 'id,first_name,last_name,phone,last_visit,status,hot_list', filter: `account_id=eq.${currentAccountId}`, order: 'first_name.asc' });
     renderClients(allClients);
-  } catch (e) { showToast('Failed to load clients: ' + e.message, 'error'); }
+  } catch(e) { showToast('Failed to load clients: ' + e.message, 'error'); }
 }
 
 function renderClients(clients) {
@@ -1041,142 +736,121 @@ function renderClients(clients) {
     : clients.map(c => clientCardHTML(c, true)).join('');
 }
 
-const VIP_LIMIT = 20;
-const GAP_LIMIT = 4;
-
-function clientCardHTML(c, showVisitBtn) {
+function clientCardHTML(c, showActions) {
   const inactive = daysSince(c.last_visit) >= 35;
-  const badge = inactive
-    ? `<span class="status-badge badge-inactive">Inactive</span>`
-    : `<span class="status-badge badge-active">Active</span>`;
-  const visitBtn = showVisitBtn ? `<button class="btn-visited" onclick="markVisited('${c.id}', this)">Client Visited Today</button>` : '';
+  const badge = inactive ? `<span class="status-badge badge-inactive">Inactive</span>` : `<span class="status-badge badge-active">Active</span>`;
   const vipCount = allClients.filter(x => x.hot_list).length;
   const canAddVip = c.hot_list || vipCount < VIP_LIMIT;
-  const vipBtn = showVisitBtn ? (c.hot_list
-    ? `<button class="btn-vip btn-vip-active" onclick="toggleVip('${c.id}', false, this)">⭐ Remove VIP</button>`
-    : canAddVip
-      ? `<button class="btn-vip" onclick="toggleVip('${c.id}', true, this)">Add to VIP</button>`
-      : `<button class="btn-vip btn-vip-disabled" disabled>VIP Limit Reached</button>`
-  ) : '';
-
+  const actions = showActions ? `
+    <div style="display:flex;gap:8px;margin-top:4px;align-items:center">
+      ${c.hot_list
+        ? `<button class="btn-vip btn-vip-active" onclick="toggleVip('${c.id}', false, this)">⭐ Remove VIP</button>`
+        : canAddVip
+          ? `<button class="btn-vip" onclick="toggleVip('${c.id}', true, this)">Add to VIP</button>`
+          : `<button class="btn-vip btn-vip-disabled" disabled>VIP Limit</button>`
+      }
+      <button class="btn-visited" style="flex:1" onclick="markVisited('${c.id}', this)">Client Visited Today</button>
+      <button class="btn-delete" onclick="promptDeleteClient('${c.id}', '${escapeAttr(c.first_name)} ${escapeAttr(c.last_name)}')" title="Delete">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      </button>
+    </div>` : '';
   return `
     <div class="client-card">
       <div class="client-name">${c.first_name} ${c.last_name}</div>
       <div class="client-meta">
         <div><div class="meta-label">Last Visit</div><div class="meta-value">${formatDate(c.last_visit)}</div></div>
         <div><div class="meta-label">Status</div><div class="meta-value">${badge}</div></div>
-        <div><div class="meta-label">Staff</div><div class="meta-value">${STAFF_NAME}</div></div>
         ${c.phone ? `<div><div class="meta-label">Phone</div><div class="meta-value" style="font-family:monospace;font-size:12px">${c.phone}</div></div>` : ''}
+        ${c.hot_list ? `<div><div class="meta-label">VIP</div><div class="meta-value" style="color:var(--green)">⭐ Hot List</div></div>` : ''}
       </div>
-      <div style="display:flex;gap:8px;margin-top:4px">
-        ${vipBtn}
-        ${visitBtn}
-      </div>
+      ${actions}
     </div>`;
-}
-
-async function toggleVip(clientId, makeVip, btn) {
-  btn.textContent = 'Saving...';
-  btn.disabled = true;
-  try {
-    const token = SESSION_TOKEN || SUPABASE_ANON_KEY;
-    await fetch(`${SUPABASE_URL}/rest/v1/clients?id=eq.${clientId}`, {
-      method: 'PATCH',
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({ hot_list: makeVip, updated_at: new Date().toISOString() })
-    });
-    showToast(makeVip ? '⭐ Added to VIP list' : 'Removed from VIP list');
-    loadClients();
-  } catch (e) {
-    showToast('Failed: ' + e.message, 'error');
-    btn.disabled = false;
-  }
 }
 
 function filterClients(q) {
   renderClients(allClients.filter(c => `${c.first_name} ${c.last_name}`.toLowerCase().includes(q.toLowerCase())));
 }
 
+async function toggleVip(clientId, makeVip, btn) {
+  btn.textContent = 'Saving...'; btn.disabled = true;
+  try {
+    await db('clients', { method: 'PATCH', filter: `id=eq.${clientId}`, prefer: 'return=minimal', body: { hot_list: makeVip, updated_at: new Date().toISOString() } });
+    showToast(makeVip ? '⭐ Added to VIP list' : 'Removed from VIP list');
+    loadClients();
+  } catch(e) { showToast('Failed: ' + e.message, 'error'); btn.disabled = false; }
+}
+
 async function markVisited(clientId, btn) {
-  btn.textContent = 'Saving...';
-  btn.disabled = true;
+  btn.textContent = 'Saving...'; btn.disabled = true;
   try {
     const today = new Date().toISOString().split('T')[0];
-    const token = SESSION_TOKEN || SUPABASE_ANON_KEY;
-    await fetch(`${SUPABASE_URL}/rest/v1/clients?id=eq.${clientId}`, {
-      method: 'PATCH',
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({ last_visit: today, updated_at: new Date().toISOString() })
-    });
-    btn.textContent = '✓ Updated';
-    btn.classList.add('done');
+    await db('clients', { method: 'PATCH', filter: `id=eq.${clientId}`, prefer: 'return=minimal', body: { last_visit: today, updated_at: new Date().toISOString() } });
+    try {
+      await db('visits', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, client_id: clientId, recorded_via: 'manual', created_at: new Date().toISOString() } });
+    } catch(ve) { console.warn('visits table not ready:', ve.message); }
+    btn.textContent = '✓ Updated'; btn.classList.add('done');
     showToast('Last visit updated to today ✓');
     setTimeout(() => loadClients(), 1500);
-  } catch (e) {
-    btn.textContent = 'Failed — tap to retry';
-    btn.disabled = false;
-    showToast('Failed: ' + e.message, 'error');
-  }
+  } catch(e) { btn.textContent = 'Failed — tap to retry'; btn.disabled = false; showToast('Failed: ' + e.message, 'error'); }
+}
+
+function promptDeleteClient(clientId, clientName) {
+  clientToDelete = clientId;
+  document.getElementById('delete-client-name').textContent = clientName;
+  openModal('delete-client-modal');
+}
+
+async function confirmDeleteClient() {
+  if (!clientToDelete) return;
+  const btn = document.getElementById('confirm-delete-btn');
+  btn.textContent = 'Deleting...'; btn.disabled = true;
+  try {
+    await db('clients', { method: 'DELETE', filter: `id=eq.${clientToDelete}`, prefer: 'return=minimal' });
+    closeModal('delete-client-modal');
+    showToast('Client deleted');
+    clientToDelete = null;
+    loadClients();
+  } catch(e) { showToast('Failed to delete: ' + e.message, 'error'); }
+  finally { btn.textContent = 'Delete Client'; btn.disabled = false; }
 }
 
 async function addClient() {
   const firstName = document.getElementById('client-firstname').value.trim();
   const lastName = document.getElementById('client-lastname').value.trim();
-  const phone = document.getElementById('client-phone').value.trim();
+  const rawPhone = document.getElementById('client-phone').value.trim();
   const lastVisit = document.getElementById('client-lastvisit').value;
-
-  if (!firstName || !phone) { showToast('First name and phone are required', 'error'); return; }
-
+  if (!firstName || !rawPhone) { showToast('First name and phone are required', 'error'); return; }
+  const phone = normalisePhone(rawPhone);
   const btn = document.getElementById('add-client-btn');
-  btn.textContent = 'Adding...';
-  btn.disabled = true;
-
+  btn.textContent = 'Adding...'; btn.disabled = true;
   try {
-    await db('clients', {
-      method: 'POST', prefer: 'return=minimal',
-      body: { account_id: ACCOUNT_ID, first_name: firstName, last_name: lastName, phone, last_visit: lastVisit || null, import_source: 'new', created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
-    });
+    await db('clients', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, first_name: firstName, last_name: lastName, phone, phone_normalized: phone, last_visit: lastVisit || null, import_source: 'new', created_at: new Date().toISOString(), updated_at: new Date().toISOString() } });
     closeModal('add-client-modal');
     showToast(`${firstName} added — welcome text fires in 60 mins ✓`);
     ['client-firstname','client-lastname','client-phone','client-lastvisit'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('phone-norm-preview').style.display = 'none';
     loadClients();
-  } catch (e) {
-    showToast('Failed: ' + e.message, 'error');
-  } finally {
-    btn.textContent = 'Add Client';
-    btn.disabled = false;
-  }
+  } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+  finally { btn.textContent = 'Add Client'; btn.disabled = false; }
 }
 
-// ── GAP SLOTS ──
+// ═══════════════════════════════════════
+// GAP SLOTS
+// ═══════════════════════════════════════
 async function loadGapSlots() {
+  if (!currentAccountId) return;
   try {
-    const allSlots = await db('gap_slots', { select: '*', filter: `account_id=eq.${ACCOUNT_ID}`, order: 'slot_time.desc' });
+    const allSlots = await db('gap_slots', { select: '*', filter: `account_id=eq.${currentAccountId}`, order: 'slot_time.desc' });
     const showHistory = document.getElementById('gap-history-toggle')?.checked;
     const slots = showHistory ? allSlots : allSlots.filter(s => s.status === 'open');
     const el = document.getElementById('gap-list');
     el.innerHTML = slots.length === 0
       ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>${showHistory ? 'No gap slots yet.' : 'No open gap slots.'}</p></div>`
       : slots.map(s => gapCardHTML(s)).join('');
-
-    // count gap slots this month
     const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
     const monthSlots = allSlots.filter(s => s.created_at >= monthStart);
     const remaining = GAP_LIMIT - monthSlots.length;
-
-    // show VIP clients
-    const vipClients = await db('clients', { select: 'id,first_name,last_name,last_visit', filter: `account_id=eq.${ACCOUNT_ID}&hot_list=eq.true`, order: 'first_name.asc' });
-    
+    const vipClients = await db('clients', { select: 'id,first_name,last_name,last_visit', filter: `account_id=eq.${currentAccountId}&hot_list=eq.true`, order: 'first_name.asc' });
     const vipEl = document.getElementById('vip-summary');
     if (vipEl) {
       const limitColor = remaining <= 1 ? 'var(--danger)' : remaining <= 2 ? 'var(--warning)' : 'var(--green)';
@@ -1198,24 +872,16 @@ async function loadGapSlots() {
           </div>
         </div>`;
     }
-
-    // disable add button if at limit
     const addBtn = document.getElementById('gap-add-btn');
     if (addBtn) {
       if (monthSlots.length >= GAP_LIMIT) {
-        addBtn.disabled = true;
-        addBtn.textContent = 'Monthly Limit Reached';
-        addBtn.style.opacity = '0.5';
-        addBtn.style.cursor = 'not-allowed';
+        addBtn.disabled = true; addBtn.textContent = 'Monthly Limit Reached'; addBtn.style.opacity = '0.5'; addBtn.style.cursor = 'not-allowed';
       } else {
-        addBtn.disabled = false;
-        addBtn.textContent = '+ Add slot';
-        addBtn.style.opacity = '1';
-        addBtn.style.cursor = 'pointer';
+        addBtn.disabled = false; addBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add slot';
+        addBtn.style.opacity = '1'; addBtn.style.cursor = 'pointer';
       }
     }
-
-  } catch (e) { showToast('Failed: ' + e.message, 'error'); }
+  } catch(e) { showToast('Failed: ' + e.message, 'error'); }
 }
 
 function toggleVipList() {
@@ -1230,12 +896,9 @@ function toggleVipList() {
 function gapCardHTML(s) {
   const isOpen = s.status === 'open';
   return `
-    <div class="gap-card" style="flex-direction:column;align-items:flex-start;gap:10px">
+    <div class="gap-card" style="flex-direction:column;align-items:flex-start;gap:10px;display:flex">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%">
-        <div>
-          <div class="gap-time">${formatDateTime(s.slot_time)}</div>
-          <div class="gap-message">${s.message || 'Default gap slot message'}</div>
-        </div>
+        <div><div class="gap-time">${formatDateTime(s.slot_time)}</div><div class="gap-message">${s.message || 'Default gap slot message'}</div></div>
         <span class="gap-status ${isOpen ? 'gap-open' : 'gap-filled'}">${isOpen ? 'Open' : 'Filled'}</span>
       </div>
       ${isOpen ? `<button class="btn-visited" style="width:100%;background:#1c3828;color:var(--green);border:1px solid var(--green)" onclick="markSlotFilled('${s.id}', this)">Mark as Filled</button>` : ''}
@@ -1243,61 +906,36 @@ function gapCardHTML(s) {
 }
 
 async function markSlotFilled(slotId, btn) {
-  btn.textContent = 'Saving...';
-  btn.disabled = true;
+  btn.textContent = 'Saving...'; btn.disabled = true;
   try {
-    const token = SESSION_TOKEN || SUPABASE_ANON_KEY;
-    await fetch(`${SUPABASE_URL}/rest/v1/gap_slots?id=eq.${slotId}`, {
-      method: 'PATCH',
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({ status: 'filled' })
-    });
+    await db('gap_slots', { method: 'PATCH', filter: `id=eq.${slotId}`, prefer: 'return=minimal', body: { status: 'filled' } });
     showToast('Gap slot marked as filled ✓');
     loadGapSlots();
-  } catch (e) {
-    showToast('Failed: ' + e.message, 'error');
-    btn.disabled = false;
-    btn.textContent = 'Mark as Filled';
-  }
+  } catch(e) { showToast('Failed: ' + e.message, 'error'); btn.disabled = false; btn.textContent = 'Mark as Filled'; }
 }
 
 async function addGapSlot() {
   const datetime = document.getElementById('gap-datetime').value;
   const message = document.getElementById('gap-message').value.trim();
   if (!datetime) { showToast('Please pick a date and time', 'error'); return; }
-
   const btn = document.getElementById('add-gap-btn');
-  btn.textContent = 'Posting...';
-  btn.disabled = true;
-
+  btn.textContent = 'Posting...'; btn.disabled = true;
   try {
-    await db('gap_slots', {
-      method: 'POST', prefer: 'return=minimal',
-      body: { account_id: ACCOUNT_ID, slot_time: new Date(datetime).toISOString(), message: message || null, status: 'open', created_at: new Date().toISOString() }
-    });
+    await db('gap_slots', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, slot_time: new Date(datetime).toISOString(), message: message || null, status: 'open', created_at: new Date().toISOString() } });
     closeModal('add-gap-modal');
     showToast('Gap slot posted — VIP clients will be texted ✓');
     document.getElementById('gap-datetime').value = '';
     document.getElementById('gap-message').value = '';
     loadGapSlots();
-  } catch (e) {
-    showToast('Failed: ' + e.message, 'error');
-  } finally {
-    btn.textContent = 'Post Slot';
-    btn.disabled = false;
-  }
+  } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+  finally { btn.textContent = 'Post Slot'; btn.disabled = false; }
 }
 
-// ── CSV IMPORT ──
+// ═══════════════════════════════════════
+// CSV IMPORT
+// ═══════════════════════════════════════
 let parsedRows = [];
-
 function handleFileSelect(e) { if (e.target.files[0]) processCSV(e.target.files[0]); }
-
 function processCSV(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -1305,84 +943,53 @@ function processCSV(file) {
     if (lines.length < 2) { showToast('CSV appears empty', 'error'); return; }
     const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/['"]/g, ''));
     parsedRows = [];
-
     for (let i = 1; i < lines.length; i++) {
       const cols = lines[i].split(',').map(c => c.trim().replace(/['"]/g, ''));
-      const row = {};
-      headers.forEach((h, idx) => row[h] = cols[idx] || '');
+      const row = {}; headers.forEach((h, idx) => row[h] = cols[idx] || '');
       const firstName = row['first name'] || row['firstname'] || row['first_name'] || (row['name'] || '').split(' ')[0] || '';
       const lastName = row['last name'] || row['lastname'] || row['last_name'] || (row['name'] || '').split(' ').slice(1).join(' ') || '';
-      const phone = row['phone'] || row['mobile'] || row['phone number'] || row['telephone'] || '';
+      const rawPhone = row['phone'] || row['mobile'] || row['phone number'] || row['telephone'] || '';
+      const phone = rawPhone ? normalisePhone(rawPhone) : '';
       const lastVisit = row['last visit'] || row['lastvisit'] || row['last_visit'] || row['last appointment'] || '';
       if (firstName || phone) parsedRows.push({ firstName, lastName, phone, lastVisit });
     }
-
     document.getElementById('import-filename').textContent = file.name;
     document.getElementById('import-count').textContent = `${parsedRows.length} clients found`;
     document.getElementById('import-zone').style.display = 'none';
     document.getElementById('import-preview').style.display = 'block';
-
     const preview = document.getElementById('import-preview-list');
-    preview.innerHTML = parsedRows.slice(0, 15).map(r => `
-      <div class="import-preview-row">
-        <div class="import-preview-name">${r.firstName} ${r.lastName}</div>
-        <div class="import-preview-phone">${r.phone || '—'}</div>
-      </div>`).join('');
-
-    if (parsedRows.length > 15) {
-      preview.innerHTML += `<div class="import-preview-row" style="justify-content:center;color:var(--muted)">...and ${parsedRows.length - 15} more</div>`;
-    }
+    preview.innerHTML = parsedRows.slice(0, 15).map(r => `<div class="import-preview-row"><div class="import-preview-name">${r.firstName} ${r.lastName}</div><div class="import-preview-phone">${r.phone || '—'}</div></div>`).join('');
+    if (parsedRows.length > 15) preview.innerHTML += `<div class="import-preview-row" style="justify-content:center;color:var(--muted)">...and ${parsedRows.length - 15} more</div>`;
   };
   reader.readAsText(file);
 }
-
 async function confirmImport() {
   const btn = document.getElementById('import-btn');
-  btn.textContent = 'Importing...';
-  btn.disabled = true;
+  btn.textContent = 'Importing...'; btn.disabled = true;
   let imported = 0, duplicates = 0, failed = 0;
-
   for (const row of parsedRows) {
     try {
-      await db('clients', {
-        method: 'POST', prefer: 'resolution=ignore-duplicates,return=minimal',
-        body: { account_id: ACCOUNT_ID, first_name: row.firstName, last_name: row.lastName, phone: row.phone, last_visit: row.lastVisit || null, import_source: 'csv_import', created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
-      });
+      await db('clients', { method: 'POST', prefer: 'resolution=ignore-duplicates,return=minimal', body: { account_id: currentAccountId, first_name: row.firstName, last_name: row.lastName, phone: row.phone, phone_normalized: row.phone, last_visit: row.lastVisit || null, import_source: 'csv_import', created_at: new Date().toISOString(), updated_at: new Date().toISOString() } });
       imported++;
-    } catch (e) {
+    } catch(e) {
       if (e.message?.includes('duplicate') || e.message?.includes('unique')) duplicates++;
       else failed++;
     }
   }
-
   document.getElementById('import-preview').style.display = 'none';
   document.getElementById('import-result').style.display = 'block';
-  document.getElementById('import-result-text').innerHTML = `
-    <span style="color:var(--green)">✓ ${imported} clients imported</span><br>
-    ${duplicates ? `<span>⊘ ${duplicates} duplicates skipped</span><br>` : ''}
-    ${failed ? `<span style="color:var(--danger)">✗ ${failed} failed</span><br>` : ''}
-    <br>No welcome texts sent to imported clients.`;
+  document.getElementById('import-result-text').innerHTML = `<span style="color:var(--green)">✓ ${imported} clients imported</span><br>${duplicates ? `<span>⊘ ${duplicates} duplicates skipped</span><br>` : ''}${failed ? `<span style="color:var(--danger)">✗ ${failed} failed</span><br>` : ''}<br>No welcome texts sent to imported clients.`;
 }
+function cancelImport() { parsedRows = []; document.getElementById('import-zone').style.display = 'block'; document.getElementById('import-preview').style.display = 'none'; document.getElementById('csv-file').value = ''; }
+function resetImport() { parsedRows = []; document.getElementById('import-zone').style.display = 'block'; document.getElementById('import-preview').style.display = 'none'; document.getElementById('import-result').style.display = 'none'; document.getElementById('csv-file').value = ''; }
 
-function cancelImport() {
-  parsedRows = [];
-  document.getElementById('import-zone').style.display = 'block';
-  document.getElementById('import-preview').style.display = 'none';
-  document.getElementById('csv-file').value = '';
-}
-
-function resetImport() {
-  parsedRows = [];
-  document.getElementById('import-zone').style.display = 'block';
-  document.getElementById('import-preview').style.display = 'none';
-  document.getElementById('import-result').style.display = 'none';
-  document.getElementById('csv-file').value = '';
-}
-
-// ── SETTINGS ──
+// ═══════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════
 async function loadSettings() {
+  if (!currentAccountId) return;
   try {
-    const accounts = await db('accounts', { select: 'inactive_days,welcome_message,inactive_message,gap_slot_message', filter: `id=eq.${ACCOUNT_ID}` });
+    const accounts = await db('accounts', { select: 'inactive_days,welcome_message,inactive_message,gap_slot_message', filter: `id=eq.${currentAccountId}` });
     if (accounts.length) {
       const a = accounts[0];
       if (a.inactive_days) document.getElementById('setting-inactive-days').value = a.inactive_days;
@@ -1390,48 +997,28 @@ async function loadSettings() {
       if (a.inactive_message) document.getElementById('setting-inactive-msg').value = a.inactive_message;
       if (a.gap_slot_message) document.getElementById('setting-gap-msg').value = a.gap_slot_message;
     }
-  } catch (e) {
-    // columns may not exist yet — that's fine
-  }
+  } catch(e) { /* columns may not exist yet */ }
 }
-
 async function saveSettings() {
   const btn = document.getElementById('save-settings-btn');
-  btn.textContent = 'Saving...';
-  btn.disabled = true;
-
+  btn.textContent = 'Saving...'; btn.disabled = true;
   try {
-    await db('accounts', {
-      method: 'PATCH', filter: `id=eq.${ACCOUNT_ID}`, prefer: 'return=minimal',
-      body: {
-        inactive_days: parseInt(document.getElementById('setting-inactive-days').value) || 35,
-        welcome_message: document.getElementById('setting-welcome-msg').value.trim() || null,
-        inactive_message: document.getElementById('setting-inactive-msg').value.trim() || null,
-        gap_slot_message: document.getElementById('setting-gap-msg').value.trim() || null,
-        updated_at: new Date().toISOString()
-      }
-    });
+    await db('accounts', { method: 'PATCH', filter: `id=eq.${currentAccountId}`, prefer: 'return=minimal', body: {
+      inactive_days: parseInt(document.getElementById('setting-inactive-days').value) || 35,
+      welcome_message: document.getElementById('setting-welcome-msg').value.trim() || null,
+      inactive_message: document.getElementById('setting-inactive-msg').value.trim() || null,
+      gap_slot_message: document.getElementById('setting-gap-msg').value.trim() || null,
+      updated_at: new Date().toISOString()
+    }});
     showToast('Settings saved ✓');
-  } catch (e) {
-    showToast('Failed to save: ' + e.message, 'error');
-  } finally {
-    btn.textContent = 'Save Settings';
-    btn.disabled = false;
-  }
+  } catch(e) { showToast('Failed to save: ' + e.message, 'error'); }
+  finally { btn.textContent = 'Save Settings'; btn.disabled = false; }
 }
 
-// ── INIT ──
-(function() {
-  const token = localStorage.getItem("bb_token");
-  const exp = localStorage.getItem("bb_token_exp");
-  if (token && exp && Date.now() < parseInt(exp)) {
-    SESSION_TOKEN = token;
-    showApp();
-    loadHome();
-  } else {
-    showLogin();
-  }
-})();
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+initAuth();
 </script>
 </body>
 </html>
