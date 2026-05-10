@@ -411,7 +411,7 @@
       <input class="form-input" type="tel" id="client-phone" placeholder="07700 000000" oninput="previewPhoneNorm(this)">
       <div class="phone-preview" id="phone-norm-preview"></div>
     </div>
-    <div class="form-group"><label class="form-label">Last Visit Date</label><input class="form-input" type="date" id="client-lastvisit"></div>
+    <div class="form-group"><label class="form-label">Last Visit Date</label><input class="form-input" type="date" id="client-lastvisit" style="cursor:pointer;color-scheme:dark"></div>
     <div class="form-actions">
       <button class="btn btn-secondary" onclick="closeModal('add-client-modal')">Cancel</button>
       <button class="btn btn-primary" onclick="addClient()" id="add-client-btn">Add Client</button>
@@ -720,7 +720,7 @@ async function loadHome() {
     document.getElementById('home-gap-list').innerHTML = slots.length === 0
       ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No open gap slots</p></div>`
       : slots.map(s => gapCardHTML(s)).join('');
-  } catch(e) { showToast('Failed to load: ' + e.message, 'error'); }
+  } catch(e) { showToast('Could not load data — check your connection', 'error'); }
 }
 
 // ═══════════════════════════════════════
@@ -731,7 +731,7 @@ async function loadClients() {
   try {
     allClients = await db('clients', { select: 'id,first_name,last_name,phone,last_visit,status,hot_list', filter: `account_id=eq.${currentAccountId}`, order: 'first_name.asc' });
     renderClients(allClients);
-  } catch(e) { showToast('Failed to load clients: ' + e.message, 'error'); }
+  } catch(e) { showToast('Could not load clients — check your connection', 'error'); }
 }
 
 function renderClients(clients) {
@@ -782,7 +782,7 @@ async function toggleVip(clientId, makeVip, btn) {
     await db('clients', { method: 'PATCH', filter: `id=eq.${clientId}`, prefer: 'return=minimal', body: { hot_list: makeVip, updated_at: new Date().toISOString() } });
     showToast(makeVip ? '⭐ Added to VIP list' : 'Removed from VIP list');
     loadClients();
-  } catch(e) { showToast('Failed: ' + e.message, 'error'); btn.disabled = false; }
+  } catch(e) { showToast('Something went wrong — please try again', 'error'); btn.disabled = false; }
 }
 
 async function markVisited(clientId, btn) {
@@ -796,7 +796,7 @@ async function markVisited(clientId, btn) {
     btn.textContent = '✓ Updated'; btn.classList.add('done');
     showToast('Last visit updated to today ✓');
     setTimeout(() => loadClients(), 1500);
-  } catch(e) { btn.textContent = 'Failed — tap to retry'; btn.disabled = false; showToast('Failed: ' + e.message, 'error'); }
+  } catch(e) { btn.textContent = 'Failed — tap to retry'; btn.disabled = false; showToast('Could not update visit — please try again', 'error'); }
 }
 
 function promptDeleteClient(clientId, clientName) {
@@ -815,7 +815,7 @@ async function confirmDeleteClient() {
     showToast('Client deleted');
     clientToDelete = null;
     loadClients();
-  } catch(e) { showToast('Failed to delete: ' + e.message, 'error'); }
+  } catch(e) { showToast('Could not delete client — please try again', 'error'); }
   finally { btn.textContent = 'Delete Client'; btn.disabled = false; }
 }
 
@@ -835,7 +835,13 @@ async function addClient() {
     ['client-firstname','client-lastname','client-phone','client-lastvisit'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('phone-norm-preview').style.display = 'none';
     loadClients();
-  } catch(e) { showToast('Failed: ' + e.message, 'error'); }
+  } catch(e) {
+    if (e.message?.includes('duplicate') || e.message?.includes('unique') || e.message?.includes('already exists')) {
+      showToast('A client with this phone number already exists', 'error');
+    } else {
+      showToast('Something went wrong — please try again', 'error');
+    }
+  }
   finally { btn.textContent = 'Add Client'; btn.disabled = false; }
 }
 
@@ -913,7 +919,12 @@ function gapCardHTML(s) {
 async function markSlotFilled(slotId, btn) {
   btn.textContent = 'Saving...'; btn.disabled = true;
   try {
-    await db('gap_slots', { method: 'PATCH', filter: `id=eq.${slotId}`, prefer: 'return=minimal', body: { status: 'filled' } });
+    const token = currentSession ? currentSession.access_token : SUPABASE_ANON_KEY;
+    await fetch(`${SUPABASE_URL}/rest/v1/gap_slots?id=eq.${slotId}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ status: 'filled' })
+    });
     showToast('Gap slot marked as filled ✓');
     loadGapSlots();
   } catch(e) { showToast('Failed: ' + e.message, 'error'); btn.disabled = false; btn.textContent = 'Mark as Filled'; }
@@ -926,7 +937,12 @@ async function addGapSlot() {
   const btn = document.getElementById('add-gap-btn');
   btn.textContent = 'Posting...'; btn.disabled = true;
   try {
-    await db('gap_slots', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, slot_time: new Date(datetime).toISOString(), message: message || null, status: 'open', created_at: new Date().toISOString() } });
+    // Parse datetime and adjust for BST (UTC+1 in summer)
+    const localDate = new Date(datetime);
+    const offset = localDate.getTimezoneOffset(); // negative in BST
+    const utcDate = new Date(localDate.getTime() - (offset * 60000));
+    const slotTimeISO = utcDate.toISOString();
+    await db('gap_slots', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, slot_time: slotTimeISO, message: message || null, status: 'open', created_at: new Date().toISOString() } });
     closeModal('add-gap-modal');
     showToast('Gap slot posted — VIP clients will be texted ✓');
     document.getElementById('gap-datetime').value = '';
@@ -1016,7 +1032,7 @@ async function saveSettings() {
       updated_at: new Date().toISOString()
     }});
     showToast('Settings saved ✓');
-  } catch(e) { showToast('Failed to save: ' + e.message, 'error'); }
+  } catch(e) { showToast('Could not save settings — please try again', 'error'); }
   finally { btn.textContent = 'Save Settings'; btn.disabled = false; }
 }
 
