@@ -460,7 +460,7 @@
 const SUPABASE_URL = 'https://lirxjznkpfdzsbphmmoj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpcnhqem5rcGZkenNicGhtbW9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNTI2NzcsImV4cCI6MjA5MjYyODY3N30.fBFLKnqvXkj37mlpoIa07IMruqZMHkex5xtnrW1aXXM';
 const VIP_LIMIT = 20;
-const GAP_LIMIT = 4;
+const GAP_LIMIT = 10;
 
 let currentSession = null;
 let currentAccountId = null;
@@ -937,12 +937,31 @@ async function addGapSlot() {
   const btn = document.getElementById('add-gap-btn');
   btn.textContent = 'Posting...'; btn.disabled = true;
   try {
-    // Parse datetime and adjust for BST (UTC+1 in summer)
-    const localDate = new Date(datetime);
-    const offset = localDate.getTimezoneOffset(); // negative in BST
-    const utcDate = new Date(localDate.getTime() - (offset * 60000));
+    // Build ISO string directly from datetime-local value (already local time)
+    const [datePart, timePart] = datetime.split('T');
+    const [year, month, day] = datePart.split('-').map(Number);
+    const [hour, minute] = timePart.split(':').map(Number);
+    // Get UTC offset in hours for BST correction
+    const localDate = new Date(year, month - 1, day, hour, minute);
+    const utcOffset = localDate.getTimezoneOffset();
+    const utcDate = new Date(localDate.getTime() - (utcOffset * 60000));
     const slotTimeISO = utcDate.toISOString();
-    await db('gap_slots', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, slot_time: slotTimeISO, message: message || null, status: 'open', created_at: new Date().toISOString() } });
+    // Use empty string instead of null for message to avoid not-null constraint
+    const messageValue = message && message.length > 0 ? message : '';
+    const token = currentSession ? currentSession.access_token : SUPABASE_ANON_KEY;
+    await fetch(`${SUPABASE_URL}/rest/v1/gap_slots`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ account_id: currentAccountId, slot_time: slotTimeISO, message: messageValue, status: 'open', created_at: new Date().toISOString() })
+    });
+    // Trigger n8n Gap Slot webhook
+    try {
+      await fetch('https://bookback.app.n8n.cloud/webhook/gap-slot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: currentAccountId, slot_time: slotTimeISO, message: messageValue })
+      });
+    } catch(we) { console.warn('n8n webhook failed:', we.message); }
     closeModal('add-gap-modal');
     showToast('Gap slot posted — VIP clients will be texted ✓');
     document.getElementById('gap-datetime').value = '';
