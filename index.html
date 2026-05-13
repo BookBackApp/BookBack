@@ -779,7 +779,13 @@ function filterClients(q) {
 async function toggleVip(clientId, makeVip, btn) {
   btn.textContent = 'Saving...'; btn.disabled = true;
   try {
-    await db('clients', { method: 'PATCH', filter: `id=eq.${clientId}`, prefer: 'return=minimal', body: { hot_list: makeVip, updated_at: new Date().toISOString() } });
+    const token = currentSession ? currentSession.access_token : SUPABASE_ANON_KEY;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/clients?id=eq.${clientId}`, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ hot_list: makeVip, updated_at: new Date().toISOString() })
+    });
+    if (!res.ok) throw new Error('Failed');
     showToast(makeVip ? '⭐ Added to VIP list' : 'Removed from VIP list');
     loadClients();
   } catch(e) { showToast('Something went wrong — please try again', 'error'); btn.disabled = false; }
