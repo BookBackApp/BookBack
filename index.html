@@ -393,7 +393,38 @@
   <div class="nav-item" id="nav-gapslots" onclick="navigate('gapslots', this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Gap Slots</div>
   <div class="nav-item" id="nav-import" onclick="navigate('import', this)"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import</div>
   <div class="nav-item" id="nav-settings" onclick="navigate('settings', this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</div>
+  <div class="nav-item" id="nav-admin" onclick="navigate('admin', this)" style="display:none"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Admin</div>
 </nav>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="page-admin">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-title">Admin</div>
+      <div class="page-subtitle">BookBack system overview</div>
+    </div>
+
+    <div class="stats-row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="stat-card"><div class="stat-label">Total Accounts</div><div class="stat-value green" id="admin-total-accounts">—</div></div>
+      <div class="stat-card"><div class="stat-label">Total Clients</div><div class="stat-value" id="admin-total-clients">—</div></div>
+      <div class="stat-card"><div class="stat-label">Texts This Month</div><div class="stat-value" id="admin-total-texts">—</div></div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">All Accounts</div>
+      <div id="admin-accounts-list">
+        <div style="padding:14px;color:var(--muted);font-size:13px">Loading...</div>
+      </div>
+    </div>
+
+    <div class="settings-section" style="margin-top:16px">
+      <div class="settings-section-title">Recent Failed Messages</div>
+      <div id="admin-failed-list">
+        <div style="padding:14px;color:var(--muted);font-size:13px">Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div><!-- end app-root -->
 
@@ -472,13 +503,25 @@ let clientToDelete = null;
 // AUTH
 // ═══════════════════════════════════════
 async function initAuth() {
-  const stored = localStorage.getItem('bb_session');
+  // Try localStorage first, then sessionStorage as fallback
+  const stored = localStorage.getItem('bb_session') || sessionStorage.getItem('bb_session');
   if (stored) {
     try {
       const session = JSON.parse(stored);
-      const refreshed = await refreshSession(session.refresh_token);
-      if (refreshed) { await startApp(refreshed); return; }
-    } catch(e) { localStorage.removeItem('bb_session'); }
+      // If access token not expired, use it directly
+      if (session.access_token && session.expires_at && Date.now() < session.expires_at * 1000) {
+        await startApp(session);
+        return;
+      }
+      // Otherwise try to refresh
+      if (session.refresh_token) {
+        const refreshed = await refreshSession(session.refresh_token);
+        if (refreshed) { await startApp(refreshed); return; }
+      }
+    } catch(e) {
+      localStorage.removeItem('bb_session');
+      sessionStorage.removeItem('bb_session');
+    }
   }
   showAuth();
 }
@@ -491,7 +534,7 @@ async function refreshSession(token) {
     });
     if (!res.ok) return null;
     const data = await res.json();
-    if (data.access_token) { localStorage.setItem('bb_session', JSON.stringify(data)); return data; }
+    if (data.access_token) { localStorage.setItem('bb_session', JSON.stringify(data)); sessionStorage.setItem('bb_session', JSON.stringify(data)); return data; }
     return null;
   } catch(e) { return null; }
 }
@@ -515,6 +558,10 @@ async function startApp(session) {
       currentStaffName = accounts[0].staff_name || 'there';
       document.getElementById('user-avatar').textContent = currentStaffName.charAt(0).toUpperCase();
       document.getElementById('home-greeting').textContent = `Hey, ${currentStaffName} 👋`;
+      // Show admin nav if admin
+      if (session.user.email === ADMIN_EMAIL) {
+        document.getElementById('nav-admin').style.display = 'flex';
+      }
     }
   } catch(e) { console.error('Account load failed', e); }
   loadHome();
@@ -534,6 +581,7 @@ async function loginUser() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error_description || data.msg || 'Login failed');
     localStorage.setItem('bb_session', JSON.stringify(data));
+    sessionStorage.setItem('bb_session', JSON.stringify(data));
     await startApp(data);
   } catch(e) { showAuthError(e.message); }
   finally { btn.textContent = 'Log In'; btn.disabled = false; }
@@ -656,6 +704,7 @@ function navigate(page, el) {
   if (page === 'clients') loadClients();
   if (page === 'gapslots') loadGapSlots();
   if (page === 'settings') loadSettings();
+  if (page === 'admin') loadAdmin();
 }
 
 function switchTab(tab, el) {
@@ -1070,6 +1119,76 @@ async function saveSettings() {
     showToast('Settings saved ✓');
   } catch(e) { showToast('Could not save settings — please try again', 'error'); }
   finally { btn.textContent = 'Save Settings'; btn.disabled = false; }
+}
+
+// ═══════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════
+const ADMIN_EMAIL = 'masonhomer33@gmail.com';
+const ADMIN_USER_ID = 'd7131b5d-0668-4e8a-bac9-11c7e2a126f1';
+
+function checkAdmin(session) {
+  return session && session.user && session.user.email === ADMIN_EMAIL;
+}
+
+async function loadAdmin() {
+  if (!currentSession || !checkAdmin(currentSession)) {
+    navigate('home', document.getElementById('nav-home'));
+    return;
+  }
+  try {
+    // Load all accounts
+    const accounts = await db('accounts', { select: 'id,staff_name,business_name,plan,subscription_status,created_at,email' });
+    document.getElementById('admin-total-accounts').textContent = accounts.length;
+
+    // Load all clients count
+    const clients = await db('clients', { select: 'id,account_id' });
+    document.getElementById('admin-total-clients').textContent = clients.length;
+
+    // Load texts this month
+    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+    const msgs = await db('messages', { select: 'id,account_id,status,created_at', filter: `created_at=gte.${monthStart}` });
+    document.getElementById('admin-total-texts').textContent = msgs.filter(m => m.status === 'sent').length;
+
+    // Render accounts list
+    const accountsList = document.getElementById('admin-accounts-list');
+    if (accounts.length === 0) {
+      accountsList.innerHTML = '<div style="padding:14px;color:var(--muted);font-size:13px">No accounts yet</div>';
+    } else {
+      accountsList.innerHTML = accounts.map(a => {
+        const clientCount = clients.filter(c => c.account_id === a.id).length;
+        const textCount = msgs.filter(m => m.account_id === a.id && m.status === 'sent').length;
+        return `
+          <div class="settings-item">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div class="settings-item-label">${a.business_name || a.staff_name || 'Unknown'}</div>
+                <div style="font-size:12px;color:var(--muted)">${a.email || ''} · ${a.plan || 'trial'}</div>
+              </div>
+              <div style="text-align:right;font-size:12px;color:var(--muted)">
+                <div>${clientCount} clients</div>
+                <div>${textCount} texts</div>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Render failed messages
+    const failed = await db('messages', { select: 'id,type,error,created_at,account_id', filter: `status=eq.failed`, order: 'created_at.desc', limit: '20' });
+    const failedList = document.getElementById('admin-failed-list');
+    if (failed.length === 0) {
+      failedList.innerHTML = '<div style="padding:14px;color:var(--green);font-size:13px">✓ No failed messages</div>';
+    } else {
+      failedList.innerHTML = failed.map(f => `
+        <div class="settings-item">
+          <div style="font-size:13px;font-weight:600">${f.type || 'Unknown'}</div>
+          <div style="font-size:12px;color:var(--danger)">${f.error || 'Unknown error'}</div>
+          <div style="font-size:11px;color:var(--muted)">${formatDate(f.created_at)}</div>
+        </div>`).join('');
+    }
+
+  } catch(e) { showToast('Admin load failed: ' + e.message, 'error'); }
 }
 
 // ═══════════════════════════════════════
