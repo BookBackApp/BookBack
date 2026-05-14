@@ -604,12 +604,17 @@ async function signupUser() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error_description || data.msg || 'Signup failed');
     if (data.access_token) {
-      await fetch(`${SUPABASE_URL}/rest/v1/accounts`, {
+      const acctRes = await fetch(`${SUPABASE_URL}/rest/v1/accounts`, {
         method: 'POST',
         headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${data.access_token}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
         body: JSON.stringify({ user_id: data.user.id, email, staff_name: name, business_name: business || name + "'s Business", plan: 'trial', subscription_status: 'trialing', created_at: new Date().toISOString(), updated_at: new Date().toISOString() })
       });
+      if (!acctRes.ok) {
+        const acctErr = await acctRes.json().catch(() => ({}));
+        throw new Error('Account setup failed: ' + (acctErr.message || acctRes.status));
+      }
       localStorage.setItem('bb_session', JSON.stringify(data));
+      sessionStorage.setItem('bb_session', JSON.stringify(data));
       await startApp(data);
     } else {
       showAuthSuccess('Account created! Check your email to confirm, then log in.');
