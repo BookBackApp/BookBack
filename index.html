@@ -13,17 +13,17 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --green: #00E676;
-    --green-dim: #00c853;
-    --bg: #111212;
-    --sidebar: #161818;
-    --card: #1c1e1e;
-    --card-hover: #212424;
-    --border: #2a2d2d;
-    --text: #f0f0f0;
-    --muted: #8a8f8f;
-    --danger: #ff5252;
-    --warning: #ffab40;
+    --green: #00C853;
+    --green-dim: #00a844;
+    --bg: #f8f8f6;
+    --sidebar: #ffffff;
+    --card: #ffffff;
+    --card-hover: #f4f4f2;
+    --border: #e8e8e4;
+    --text: #1a1a1a;
+    --muted: #888884;
+    --danger: #e53935;
+    --warning: #f57c00;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -46,7 +46,7 @@
   .bottom-nav {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 480px;
-    background: var(--sidebar); border-top: 1px solid var(--border);
+    background: var(--sidebar); border-top: 1px solid var(--border); box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
     display: flex; z-index: 50;
     padding-bottom: env(safe-area-inset-bottom);
   }
@@ -58,7 +58,7 @@
   .page { display: none; min-height: 100vh; padding-bottom: 80px; }
   .page.active { display: block; }
 
-  .banner { background: linear-gradient(135deg, #0d2318 0%, #0a1a12 60%, #111212 100%); padding: 20px 16px; border-bottom: 1px solid var(--border); }
+  .banner { background: linear-gradient(135deg, #e8f8f0 0%, #f0faf5 60%, #f8f8f6 100%); padding: 20px 16px; border-bottom: 1px solid var(--border); }
   .banner-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .logo-wrap { display: flex; align-items: center; gap: 8px; }
   .logo-icon { width: 36px; height: 36px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
@@ -77,7 +77,7 @@
   .stat-card.full { grid-column: 1 / -1; }
   .stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
   .stat-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
-  .stat-value.green { color: var(--green); }
+  .stat-value.green { color: #00a844; }
   .stat-value.warning { color: var(--warning); }
 
   .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -140,7 +140,7 @@
 
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); overscroll-behavior: contain; }
   .modal-overlay.open { display: flex; }
-  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px 20px 0 0; padding: 20px 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .modal { background: #fff; border: 1px solid var(--border); border-radius: 20px 20px 0 0; padding: 20px 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 -8px 40px rgba(0,0,0,0.1); }
   .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
   .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
 
@@ -167,7 +167,7 @@
   .toast.success { border-color: var(--green); color: var(--green); }
   .toast.error { border-color: var(--danger); color: var(--danger); }
 
-  .import-zone { border: 2px dashed var(--border); border-radius: 14px; padding: 36px 20px; text-align: center; cursor: pointer; transition: all 0.15s; margin-bottom: 16px; }
+  .import-zone { border: 2px dashed #d0d0cc; border-radius: 14px; padding: 36px 20px; text-align: center; cursor: pointer; transition: all 0.15s; margin-bottom: 16px; background: #fff; }
   .import-zone:active { border-color: var(--green); background: rgba(0,230,118,0.04); }
   .import-zone svg { width: 40px; height: 40px; stroke: var(--muted); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; }
   .import-zone p { color: var(--muted); font-size: 14px; line-height: 1.5; }
@@ -186,13 +186,13 @@
   .settings-item-label { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
   .settings-item-desc { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
 
-  .auth-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 300; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+  .auth-screen { display: none; position: fixed; inset: 0; background: #f8f8f6; z-index: 300; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
   .auth-screen.active { display: flex; }
   .auth-box { width: 100%; max-width: 360px; }
   .auth-logo { text-align: center; margin-bottom: 32px; }
   .auth-logo-title { font-size: 24px; font-weight: 700; letter-spacing: -0.4px; margin-top: 12px; }
   .auth-logo-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
-  .auth-tabs { display: flex; background: var(--card); border-radius: 10px; padding: 3px; margin-bottom: 24px; border: 1px solid var(--border); }
+  .auth-tabs { display: flex; background: #f0f0ec; border-radius: 10px; padding: 3px; margin-bottom: 24px; border: 1px solid var(--border); }
   .auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 8px; color: var(--muted); transition: all 0.15s; }
   .auth-tab.active { background: var(--green); color: #000; }
   .auth-error { background: rgba(255,82,82,0.1); border: 1px solid rgba(255,82,82,0.3); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--danger); margin-bottom: 14px; display: none; text-align: center; }
@@ -200,22 +200,506 @@
   .auth-link { color: var(--green); cursor: pointer; font-size: 13px; text-align: center; display: block; margin-top: 14px; }
 
   * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  /* ── LANDING PAGE ── */
+  .landing {
+    display: none;
+    min-height: 100vh;
+    background: #f8f8f6;
+    color: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .landing.active { display: block; }
+
+  .landing-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e8e8e4;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .landing-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .landing-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: #1a1a1a;
+    border: 2px solid #00E676;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: #00E676;
+    font-weight: 600;
+    letter-spacing: -1px;
+  }
+
+  .landing-logo-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .landing-nav-btns {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .btn-light {
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-light-outline {
+    background: transparent;
+    color: #1a1a1a;
+    border: 1.5px solid #1a1a1a;
+    letter-spacing: -0.2px;
+  }
+
+  .btn-light-outline:hover { background: #1a1a1a; color: #fff; }
+
+  .btn-light-green {
+    background: #1a1a1a;
+    color: #00C853;
+    letter-spacing: -0.2px;
+  }
+
+  .btn-light-green:hover { background: #333; }
+
+  .landing-hero {
+    padding: 80px 24px 60px;
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .landing-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,230,118,0.12);
+    border: 1px solid rgba(0,230,118,0.3);
+    color: #00a854;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    letter-spacing: 0.3px;
+  }
+
+  .landing-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #00E676;
+    border-radius: 50%;
+  }
+
+  .landing-headline {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: #1a1a1a;
+  }
+
+  .landing-headline span {
+    color: #00a854;
+  }
+
+  .landing-sub {
+    font-size: 17px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 36px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .landing-cta-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .btn-cta-primary {
+    padding: 14px 28px;
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-cta-primary:hover { background: #333; transform: translateY(-1px); }
+
+  .btn-cta-secondary {
+    padding: 14px 28px;
+    background: transparent;
+    color: #1a1a1a;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #d0d0cc;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-cta-secondary:hover { background: #f0f0ec; }
+
+  .landing-problem {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .landing-problem h2 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    margin-bottom: 12px;
+  }
+
+  .landing-problem p {
+    font-size: 16px;
+    color: #aaa;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .landing-problem span { color: #00E676; }
+
+  .landing-features {
+    padding: 60px 24px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .landing-features h2 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    text-align: center;
+    margin-bottom: 36px;
+    color: #1a1a1a;
+  }
+
+  .feature-card {
+    background: #fff;
+    border: 1px solid #e8e8e4;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .feature-card:hover { border-color: #00E676; box-shadow: 0 4px 20px rgba(0,230,118,0.08); }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(0,230,118,0.12);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+
+  .feature-content h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #1a1a1a;
+  }
+
+  .feature-content p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .landing-how {
+    background: #f0f0ec;
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .landing-how h2 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    margin-bottom: 36px;
+    color: #1a1a1a;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 20px;
+    text-align: left;
+    border: 1px solid #e8e8e4;
+  }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    background: #1a1a1a;
+    color: #00E676;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .step-text h4 { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
+  .step-text p { font-size: 13px; color: #888; }
+
+  .landing-pricing {
+    padding: 60px 24px;
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .landing-pricing h2 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+  }
+
+  .landing-pricing p {
+    font-size: 15px;
+    color: #888;
+    margin-bottom: 28px;
+  }
+
+  .pricing-card {
+    background: #fff;
+    border: 2px solid #1a1a1a;
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .pricing-badge {
+    display: inline-block;
+    background: #00E676;
+    color: #000;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .pricing-amount {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    color: #1a1a1a;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-amount span { font-size: 20px; font-weight: 600; vertical-align: top; margin-top: 10px; display: inline-block; }
+  .pricing-period { font-size: 14px; color: #888; margin-bottom: 24px; }
+
+  .pricing-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 28px;
+  }
+
+  .pricing-features li {
+    padding: 8px 0;
+    font-size: 14px;
+    color: #444;
+    border-bottom: 1px solid #f0f0ec;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pricing-features li::before { content: '✓'; color: #00a854; font-weight: 700; }
+
+  .landing-footer {
+    background: #1a1a1a;
+    color: #888;
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+  }
+
+  .landing-footer span { color: #00E676; }
+
 </style>
 </head>
 <body>
+
+<!-- LANDING PAGE -->
+<div class="landing" id="landing-page">
+  <!-- Nav -->
+  <nav class="landing-nav">
+    <div class="landing-logo">
+      <img src="logo.jpeg" style="width:36px;height:36px;border-radius:8px;object-fit:cover">
+      <span class="landing-logo-text">BookBack</span>
+    </div>
+    <div class="landing-nav-btns">
+      <button class="btn-light btn-light-outline" onclick="showAuthFromLanding('login')">Log In</button>
+      <button class="btn-light btn-light-green" onclick="showAuthFromLanding('signup')">Start Free Trial</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="landing-hero">
+    <div class="landing-badge">Beta — First month free</div>
+    <h1 class="landing-headline">Every business loses clients.<br><span>Most never come back.</span><br>Now they will.</h1>
+    <p class="landing-sub">BookBack automatically sends the right text at the right time — so your clients stay active, your gaps get filled, and you never have to chase anyone.</p>
+    <div class="landing-cta-row">
+      <button class="btn-cta-primary" onclick="showAuthFromLanding('signup')">Start Free Trial — No Card Required</button>
+      <button class="btn-cta-secondary" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">See How It Works</button>
+    </div>
+  </div>
+
+  <!-- Problem -->
+  <div class="landing-problem">
+    <h2>Your clients go quiet.<br><span>BookBack brings them back.</span></h2>
+    <p>Most businesses lose 30% of clients every year — not because of bad service, but because nobody followed up. BookBack does the following up for you, automatically.</p>
+  </div>
+
+  <!-- Features -->
+  <div class="landing-features">
+    <h2>Three automations. Zero manual work.</h2>
+    <div class="feature-card">
+      <div class="feature-icon">👋</div>
+      <div class="feature-content">
+        <h3>Welcome Text</h3>
+        <p>Every new client gets a personalised welcome text 60 minutes after their first visit. First impressions that last.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💤</div>
+      <div class="feature-content">
+        <h3>Inactive Client Text</h3>
+        <p>When a client hasn't visited in 35 days (or whatever you set), BookBack automatically texts them to come back in. No more lost regulars.</p>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-content">
+        <h3>Gap Slot Filler</h3>
+        <p>Got a last minute cancellation? Post a gap slot and your top 20 VIP clients get an instant text. Empty slots filled in minutes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="landing-how" id="how-it-works">
+    <h2>Up and running in minutes</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><h4>Sign up free</h4><p>No card required. 14 day free trial, cancel anytime.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><h4>Add your clients</h4><p>Import from Booksy, Fresha or Square, or add manually.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><h4>BookBack does the rest</h4><p>Texts go out automatically. Clients come back. You earn more.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="landing-pricing">
+    <h2>Simple pricing</h2>
+    <p>Beta testers get a special rate locked in for life</p>
+    <div class="pricing-card">
+      <div class="pricing-badge">Beta Deal — Limited Spots</div>
+      <div style="margin-bottom:8px">
+        <span style="font-size:18px;color:#aaa;text-decoration:line-through;font-weight:600">£29.99/mo after beta</span>
+      </div>
+      <div class="pricing-amount"><span>£</span>15</div>
+      <div class="pricing-period">per month, locked in for life — save £14.99/mo forever</div>
+      <ul class="pricing-features">
+        <li>Welcome text automation</li>
+        <li>Inactive client text automation</li>
+        <li>Gap slot filler</li>
+        <li>Up to 20 VIP clients</li>
+        <li>Works alongside any booking system</li>
+        <li>Additional gap slots — £1 each</li>
+        <li>14 day free trial — no card required</li>
+      </ul>
+      <button class="btn-cta-primary" style="width:100%" onclick="showAuthFromLanding('signup')">Start Free Trial</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="landing-footer">
+    <p>Built by a barber, for every appointment business. &copy; 2026 <span>BookBack</span></p>
+  </div>
+</div>
 
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="auth-screen">
   <div class="auth-box">
     <div class="auth-logo">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="56" height="56" style="display:block;margin:0 auto">
-        <rect width="100" height="100" rx="18" fill="#1a1a1a"/>
-        <g fill="none" stroke="#00E676" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M38 25 L38 75"/><path d="M38 25 L55 25 Q70 25 70 40 Q70 50 55 50 L38 50"/>
-          <path d="M38 50 L57 50 Q72 50 72 62 Q72 75 57 75 L38 75"/>
-          <path d="M28 38 L20 46 L28 54"/><path d="M20 46 L34 46"/>
-        </g>
-      </svg>
+      <img src="logo.jpeg" style="width:56px;height:56px;border-radius:12px;object-fit:cover;display:block;margin:0 auto">
       <div class="auth-logo-title">BookBack</div>
       <div class="auth-logo-sub" id="auth-subtitle">Sign in to your account</div>
     </div>
@@ -259,22 +743,13 @@
   <div class="banner">
     <div class="banner-top">
       <div class="logo-wrap">
-        <div class="logo-icon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
-            <rect width="100" height="100" rx="18" fill="#1a1a1a"/>
-            <g fill="none" stroke="#00E676" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M38 25 L38 75"/><path d="M38 25 L55 25 Q70 25 70 40 Q70 50 55 50 L38 50"/>
-              <path d="M38 50 L57 50 Q72 50 72 62 Q72 75 57 75 L38 75"/>
-              <path d="M28 38 L20 46 L28 54"/><path d="M20 46 L34 46"/>
-            </g>
-          </svg>
-        </div>
+        <img src="logo.jpeg" id="banner-logo" style="width:36px;height:36px;border-radius:8px;object-fit:cover">
         <span class="logo-text">BookBack</span>
       </div>
       <div class="user-avatar" id="user-avatar" onclick="logoutUser()" title="Tap to log out">M</div>
     </div>
     <div class="banner-greeting" id="home-greeting">Hey 👋</div>
-    <div class="banner-title">Keep clients coming back.</div>
+    <div class="banner-title" id="banner-tagline">Keep clients coming back.</div>
   </div>
   <div class="content">
     <div class="stats-row">
@@ -377,6 +852,21 @@
         <div class="settings-item-label">Gap Slot Text</div>
         <div class="settings-item-desc">Sent to VIP clients when a gap slot is posted. Use {first_name}, {shop_name}, {slot_time}.</div>
         <textarea class="form-textarea" id="setting-gap-msg" placeholder="Last minute slot available {slot_time} at {shop_name}!..."></textarea>
+      </div>
+    </div>
+    <div class="settings-section" style="margin-bottom:16px">
+      <div class="settings-section-title">Shop Logo</div>
+      <div class="settings-item">
+        <div class="settings-item-label">Upload Your Logo</div>
+        <div class="settings-item-desc">Shows in the app header. PNG or JPG, max 2MB.</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:4px">
+          <div id="logo-preview" style="width:52px;height:52px;border-radius:10px;background:var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:var(--muted);fill:none;stroke-width:1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <button class="btn btn-secondary" style="font-size:12px;padding:8px 14px" onclick="document.getElementById('logo-file-input').click()">Choose Logo</button>
+          <input type="file" id="logo-file-input" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handleLogoUpload(event)">
+        </div>
+        <div id="logo-upload-status" style="font-size:12px;margin-top:8px;color:var(--muted)"></div>
       </div>
     </div>
     <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="saveSettings()" id="save-settings-btn">Save Settings</button>
@@ -540,7 +1030,8 @@ async function refreshSession(token) {
 }
 
 function showAuth() {
-  document.getElementById('auth-screen').classList.add('active');
+  document.getElementById('landing-page').classList.add('active');
+  document.getElementById('auth-screen').classList.remove('active');
   document.getElementById('bottom-nav').style.display = 'none';
 }
 
@@ -558,6 +1049,7 @@ async function startApp(session) {
       currentStaffName = accounts[0].staff_name || 'there';
       document.getElementById('user-avatar').textContent = currentStaffName.charAt(0).toUpperCase();
       document.getElementById('home-greeting').textContent = `Hey, ${currentStaffName} 👋`;
+      if (accounts[0].logo_url) updateLogoDisplay(accounts[0].logo_url);
       // Show admin nav if admin
       if (session.user.email === ADMIN_EMAIL) {
         document.getElementById('nav-admin').style.display = 'flex';
@@ -1100,13 +1592,17 @@ function resetImport() { parsedRows = []; document.getElementById('import-zone')
 async function loadSettings() {
   if (!currentAccountId) return;
   try {
-    const accounts = await db('accounts', { select: 'inactive_days,welcome_message,inactive_message,gap_slot_message', filter: `id=eq.${currentAccountId}` });
+    const accounts = await db('accounts', { select: 'inactive_days,welcome_message,inactive_message,gap_slot_message,logo_url', filter: `id=eq.${currentAccountId}` });
     if (accounts.length) {
       const a = accounts[0];
       if (a.inactive_days) document.getElementById('setting-inactive-days').value = a.inactive_days;
       if (a.welcome_message) document.getElementById('setting-welcome-msg').value = a.welcome_message;
       if (a.inactive_message) document.getElementById('setting-inactive-msg').value = a.inactive_message;
       if (a.gap_slot_message) document.getElementById('setting-gap-msg').value = a.gap_slot_message;
+      if (a.logo_url) {
+        const preview = document.getElementById('logo-preview');
+        if (preview) preview.innerHTML = `<img src="${a.logo_url}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`;
+      }
     }
   } catch(e) { /* columns may not exist yet */ }
 }
@@ -1194,6 +1690,111 @@ async function loadAdmin() {
     }
 
   } catch(e) { showToast('Admin load failed: ' + e.message, 'error'); }
+}
+
+// ═══════════════════════════════════════
+// LANDING PAGE
+// ═══════════════════════════════════════
+function showLanding() {
+  document.getElementById('landing-page').classList.add('active');
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('bottom-nav').style.display = 'none';
+}
+
+function showAuthFromLanding(tab) {
+  document.getElementById('landing-page').classList.remove('active');
+  switchAuthTab(tab);
+  document.getElementById('auth-screen').classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// ROTATING TAGLINES
+// ═══════════════════════════════════════
+const taglines = [
+  'Message your clients today',
+  "Let's fill that chair",
+  'Every gap slot filled is money in your pocket',
+  'Your clients are out there — go get them back',
+  'Turn quiet clients into regulars',
+  'A text a day keeps the empty chair away',
+  'Stay top of mind, automatically',
+  "Let's make you some money"
+];
+
+let taglineIndex = 0;
+
+function rotateTagline() {
+  const el = document.getElementById('banner-tagline');
+  if (!el) return;
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(8px)';
+  setTimeout(() => {
+    taglineIndex = (taglineIndex + 1) % taglines.length;
+    el.textContent = taglines[taglineIndex];
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }, 300);
+}
+
+// Add transition style for tagline
+const taglineStyle = document.createElement('style');
+taglineStyle.textContent = '#banner-tagline { transition: opacity 0.3s ease, transform 0.3s ease; }';
+document.head.appendChild(taglineStyle);
+
+setInterval(rotateTagline, 3500);
+
+// ═══════════════════════════════════════
+// LOGO UPLOAD
+// ═══════════════════════════════════════
+async function handleLogoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Logo must be under 2MB', 'error'); return; }
+
+  const status = document.getElementById('logo-upload-status');
+  status.textContent = 'Uploading...';
+  status.style.color = 'var(--muted)';
+
+  try {
+    const token = currentSession ? currentSession.access_token : SUPABASE_ANON_KEY;
+    const userId = currentSession.user.id;
+    const ext = file.name.split('.').pop();
+    const path = `${userId}/logo.${ext}`;
+
+    // Upload to Supabase Storage
+    const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/logos/${path}`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}`, 'Content-Type': file.type, 'x-upsert': 'true' },
+      body: file
+    });
+
+    if (!uploadRes.ok) throw new Error('Upload failed');
+
+    const logoUrl = `${SUPABASE_URL}/storage/v1/object/public/logos/${path}`;
+
+    // Save URL to accounts table
+    await db('accounts', { method: 'PATCH', filter: `id=eq.${currentAccountId}`, prefer: 'return=minimal', body: { logo_url: logoUrl, updated_at: new Date().toISOString() } });
+
+    // Update preview
+    updateLogoDisplay(logoUrl);
+    status.textContent = 'Logo uploaded ✓';
+    status.style.color = 'var(--green)';
+    showToast('Logo updated ✓');
+  } catch(e) {
+    status.textContent = 'Upload failed — please try again';
+    status.style.color = 'var(--danger)';
+    showToast('Upload failed', 'error');
+  }
+}
+
+function updateLogoDisplay(url) {
+  if (!url) return;
+  // Update settings preview
+  const preview = document.getElementById('logo-preview');
+  if (preview) preview.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+  // Update home banner logo
+  const bannerLogo = document.getElementById('banner-logo');
+  if (bannerLogo) bannerLogo.innerHTML = `<img src="${url}" style="width:36px;height:36px;border-radius:8px;object-fit:cover">`;
 }
 
 // ═══════════════════════════════════════
