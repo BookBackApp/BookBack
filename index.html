@@ -736,7 +736,7 @@
 </div>
 
 <!-- APP ROOT -->
-<div id="app-root">
+<div id="app-root" style="display:none">
 
 <!-- HOME PAGE -->
 <div class="page active" id="page-home">
@@ -1033,11 +1033,14 @@ function showAuth() {
   document.getElementById('landing-page').classList.add('active');
   document.getElementById('auth-screen').classList.remove('active');
   document.getElementById('bottom-nav').style.display = 'none';
+  document.getElementById('app-root').style.display = 'none';
 }
 
 async function startApp(session) {
   currentSession = session;
+  document.getElementById('landing-page').classList.remove('active');
   document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('app-root').style.display = 'block';
   document.getElementById('bottom-nav').style.display = 'flex';
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/accounts?user_id=eq.${session.user.id}&select=id,staff_name,business_name`, {
@@ -1703,6 +1706,7 @@ function showLanding() {
 
 function showAuthFromLanding(tab) {
   document.getElementById('landing-page').classList.remove('active');
+  document.getElementById('app-root').style.display = 'none';
   switchAuthTab(tab);
   document.getElementById('auth-screen').classList.add('active');
 }
