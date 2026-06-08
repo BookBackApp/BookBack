@@ -252,6 +252,31 @@
 
   * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 
+  /* ===== PUSH NOTIFICATION BANNER (namespaced — cannot affect app) ===== */
+  .push-banner { display:none; margin:0 0 16px; background:linear-gradient(135deg,#1c3828,#11251a); border:1px solid var(--green); border-radius:14px; padding:16px; position:relative; }
+  .push-banner.show { display:block; }
+  .push-banner-row { display:flex; align-items:flex-start; gap:12px; }
+  .push-banner-icon { width:40px; height:40px; border-radius:10px; background:rgba(0,230,118,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .push-banner-icon svg { width:20px; height:20px; stroke:var(--green); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .push-banner-text { flex:1; }
+  .push-banner-title { font-size:14px; font-weight:700; color:#fff; margin-bottom:3px; }
+  .push-banner-desc { font-size:12px; color:#c7d6cc; line-height:1.45; }
+  .push-banner-close { position:absolute; top:10px; right:10px; width:24px; height:24px; border:none; background:transparent; color:#8fa899; cursor:pointer; font-size:18px; line-height:1; padding:0; }
+  .push-banner-actions { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
+  .push-btn { display:inline-flex; align-items:center; gap:6px; padding:9px 14px; border-radius:9px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; cursor:pointer; border:none; }
+  .push-btn-green { background:var(--green); color:#04140b; }
+  .push-btn-ghost { background:transparent; color:#c7d6cc; border:1px solid rgba(255,255,255,0.2); }
+  .push-ios-steps { margin-top:12px; font-size:12px; color:#c7d6cc; line-height:1.6; background:rgba(0,0,0,0.2); border-radius:9px; padding:11px 13px; }
+  .push-ios-steps b { color:#fff; }
+  .push-ios-steps .share-ico { display:inline-flex; vertical-align:middle; width:14px; height:14px; }
+  .push-ios-steps .share-ico svg { width:14px; height:14px; stroke:var(--green); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+  /* Notifications settings status pill */
+  .push-status { font-size:12px; font-weight:600; padding:4px 10px; border-radius:20px; display:inline-block; }
+  .push-status-on { background:rgba(0,230,118,0.12); color:var(--green); }
+  .push-status-off { background:rgba(138,143,143,0.15); color:var(--muted); }
+  .push-status-blocked { background:rgba(255,82,82,0.12); color:var(--danger); }
+
   /* ===== LANDING PAGE (namespaced — cannot affect app) ===== */
   .landing { display:none; min-height:100vh; background:var(--l-paper); color:#0c0d0c; font-family:'Plus Jakarta Sans','DM Sans',sans-serif; width:100%; max-width:480px; margin:0 auto; position:relative; box-shadow:0 0 60px rgba(0,0,0,0.6); overflow-x:hidden; }
   .landing.active { display:block; }
@@ -620,6 +645,29 @@
     <div class="banner-title" id="banner-tagline">Keep clients coming back.</div>
   </div>
   <div class="content">
+    <!-- PUSH NOTIFICATION BANNER -->
+    <div class="push-banner" id="push-banner">
+      <button class="push-banner-close" onclick="dismissPushBanner()" title="Dismiss">&times;</button>
+      <div class="push-banner-row">
+        <div class="push-banner-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="push-banner-text">
+          <div class="push-banner-title" id="push-banner-title">Turn on notifications</div>
+          <div class="push-banner-desc" id="push-banner-desc">Get an instant alert on this device when a client replies — no need to keep the app open.</div>
+        </div>
+      </div>
+      <div class="push-banner-actions" id="push-banner-actions">
+        <button class="push-btn push-btn-green" onclick="enablePushFromBanner()">Turn on notifications</button>
+        <button class="push-btn push-btn-ghost" onclick="dismissPushBanner()">Not now</button>
+      </div>
+      <div class="push-ios-steps" id="push-ios-steps" style="display:none">
+        To get notifications on iPhone, first add BookBack to your home screen:<br>
+        1. Tap the <span class="share-ico"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></span> <b>Share</b> button in Safari<br>
+        2. Choose <b>Add to Home Screen</b><br>
+        3. Open BookBack from your home screen, then turn on notifications here.
+      </div>
+    </div>
     <div class="stats-row">
       <div class="stat-card"><div class="stat-label">Total Clients</div><div class="stat-value green" id="stat-total">—</div></div>
       <div class="stat-card"><div class="stat-label">Inactive</div><div class="stat-value warning" id="stat-inactive">—</div></div>
@@ -712,6 +760,18 @@
 <div class="page" id="page-settings">
   <div class="content">
     <div class="page-header"><div class="page-title">Settings</div><div class="page-subtitle">Customise your messages and rules</div></div>
+    <div class="settings-section">
+      <div class="settings-section-title">Notifications</div>
+      <div class="settings-item">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="settings-item-label" style="margin-bottom:0">Push notifications on this device</div>
+          <span id="push-settings-status" class="push-status push-status-off">Off</span>
+        </div>
+        <div class="settings-item-desc">Get an instant alert on this device when a client replies. Set this up on each device you want alerts on.</div>
+        <button class="btn btn-secondary" id="push-settings-btn" style="margin-top:4px" onclick="enablePushFromSettings()">Enable notifications</button>
+        <div id="push-settings-hint" style="font-size:12px;margin-top:8px;color:var(--muted);display:none"></div>
+      </div>
+    </div>
     <div class="settings-section">
       <div class="settings-section-title">Inactivity Rules</div>
       <div class="settings-item">
@@ -873,6 +933,10 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- FIREBASE SDK (for push notifications) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
+
 <script>
 const SUPABASE_URL = 'https://lirxjznkpfdzsbphmmoj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpcnhqem5rcGZkenNicGhtbW9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNTI2NzcsImV4cCI6MjA5MjYyODY3N30.fBFLKnqvXkj37mlpoIa07IMruqZMHkex5xtnrW1aXXM';
@@ -945,6 +1009,7 @@ async function startApp(session) {
   } catch(e) { console.error('Account load failed', e); }
   loadHome();
   loadUnreadRepliesCount();
+  initPushAfterLogin();
 }
 
 async function loginUser() {
@@ -1554,6 +1619,7 @@ function resetImport() { parsedRows = []; document.getElementById('import-zone')
 // SETTINGS
 async function loadSettings() {
   if (!currentAccountId) return;
+  refreshPushSettingsUI();
   try {
     const accounts = await db('accounts', { select: 'inactive_days,welcome_message,inactive_message,gap_slot_message,logo_url', filter: `id=eq.${currentAccountId}` });
     if (accounts.length) {
@@ -1695,6 +1761,236 @@ function updateLogoDisplay(url) {
   if (preview) preview.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
   const bannerLogo = document.getElementById('banner-logo');
   if (bannerLogo) bannerLogo.src = url;
+}
+
+// ============================================================
+// PUSH NOTIFICATIONS
+// ============================================================
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBhOo3iKmoisJDdXZuWrgHtAGqK3feTTSU",
+  authDomain: "bookback-6954b.firebaseapp.com",
+  projectId: "bookback-6954b",
+  storageBucket: "bookback-6954b.firebasestorage.app",
+  messagingSenderId: "166409653284",
+  appId: "1:166409653284:web:a2b4d1af01823ce3875cb1"
+};
+const FIREBASE_VAPID_KEY = "NXydSPpsyriEbikiXScgUrasTd4n7gpEER2oGvbbx8Y";
+const PUSH_BANNER_DISMISS_KEY = 'bb_push_banner_dismissed';
+
+let fbMessaging = null;
+
+// Is this device an iPhone/iPad?
+function isIOS() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+// Is the app running as an installed home-screen app (standalone PWA)?
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+}
+// Does this browser support web push at all?
+function pushSupported() {
+  return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+}
+
+// Initialise the Firebase messaging object (safe to call repeatedly)
+function ensureFirebase() {
+  if (fbMessaging) return fbMessaging;
+  if (typeof firebase === 'undefined' || !firebase.messaging) return null;
+  try {
+    if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    fbMessaging = firebase.messaging();
+    // Foreground messages: show a toast (the OS won't show a banner while app is open)
+    fbMessaging.onMessage((payload) => {
+      const title = (payload.notification && payload.notification.title) || 'New reply';
+      const body = (payload.notification && payload.notification.body) || '';
+      showToast(`${title}${body ? ' — ' + body : ''}`);
+      loadUnreadRepliesCount();
+    });
+    return fbMessaging;
+  } catch(e) { console.warn('Firebase init failed:', e.message); return null; }
+}
+
+// Save a device token to this account's push_tokens array (no duplicates)
+async function saveDeviceToken(token) {
+  if (!currentAccountId || !token) return;
+  try {
+    const rows = await db('accounts', { select: 'push_tokens', filter: `id=eq.${currentAccountId}` });
+    let tokens = (rows && rows[0] && Array.isArray(rows[0].push_tokens)) ? rows[0].push_tokens : [];
+    if (tokens.includes(token)) return; // already saved
+    tokens.push(token);
+    await db('accounts', { method: 'PATCH', filter: `id=eq.${currentAccountId}`, prefer: 'return=minimal', body: { push_tokens: tokens, updated_at: new Date().toISOString() } });
+  } catch(e) { console.warn('Could not save device token:', e.message); }
+}
+
+// Register the service worker, get a token, save it. Returns true on success.
+async function registerPushToken() {
+  const messaging = ensureFirebase();
+  if (!messaging) return false;
+  try {
+    const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    const token = await messaging.getToken({ vapidKey: FIREBASE_VAPID_KEY, serviceWorkerRegistration: reg });
+    if (token) { await saveDeviceToken(token); return true; }
+    return false;
+  } catch(e) { console.warn('Push token registration failed:', e.message); return false; }
+}
+
+// Core: ask permission (if needed) and register. `interactive` = triggered by a button tap.
+async function enablePush(interactive) {
+  if (!pushSupported()) {
+    if (interactive) showToast('This device doesn\'t support notifications', 'error');
+    return 'unsupported';
+  }
+  // iOS only allows push once added to home screen
+  if (isIOS() && !isStandalone()) {
+    if (interactive) showPushIOSSteps();
+    return 'needs-install';
+  }
+  let perm = Notification.permission;
+  if (perm === 'default') {
+    try { perm = await Notification.requestPermission(); } catch(e) { perm = Notification.permission; }
+  }
+  if (perm === 'granted') {
+    const ok = await registerPushToken();
+    if (interactive) showToast(ok ? 'Notifications turned on ✓' : 'Could not turn on notifications', ok ? 'success' : 'error');
+    refreshPushSettingsUI();
+    hidePushBanner();
+    return ok ? 'granted' : 'error';
+  }
+  if (perm === 'denied') {
+    if (interactive) showToast('Notifications are blocked — turn them on in your browser settings', 'error');
+    refreshPushSettingsUI();
+    return 'denied';
+  }
+  refreshPushSettingsUI();
+  return perm;
+}
+
+// --- Home-page banner ---
+function initPushAfterLogin() {
+  // If already granted on this device, silently refresh the token (e.g. token rotated)
+  if (pushSupported() && Notification.permission === 'granted' && !(isIOS() && !isStandalone())) {
+    registerPushToken();
+    hidePushBanner();
+    return;
+  }
+  // Otherwise, maybe show the banner
+  maybeShowPushBanner();
+}
+
+function maybeShowPushBanner() {
+  const banner = document.getElementById('push-banner');
+  if (!banner) return;
+  if (!pushSupported()) return;                              // no push on this browser at all
+  if (Notification.permission === 'granted') return;         // already on
+  if (Notification.permission === 'denied') return;          // blocked — don't nag
+  if (localStorage.getItem(PUSH_BANNER_DISMISS_KEY) === '1') return; // user dismissed before
+
+  const titleEl = document.getElementById('push-banner-title');
+  const descEl = document.getElementById('push-banner-desc');
+  const actionsEl = document.getElementById('push-banner-actions');
+  const stepsEl = document.getElementById('push-ios-steps');
+
+  if (isIOS() && !isStandalone()) {
+    // iPhone, not installed — show add-to-home-screen steps instead of a permission button
+    titleEl.textContent = 'Get reply alerts on your iPhone';
+    descEl.textContent = 'Add BookBack to your home screen first, then you can turn on notifications.';
+    actionsEl.style.display = 'none';
+    stepsEl.style.display = 'block';
+  } else {
+    titleEl.textContent = 'Turn on notifications';
+    descEl.textContent = 'Get an instant alert on this device when a client replies — no need to keep the app open.';
+    actionsEl.style.display = 'flex';
+    stepsEl.style.display = 'none';
+  }
+  banner.classList.add('show');
+}
+
+function showPushIOSSteps() {
+  const stepsEl = document.getElementById('push-ios-steps');
+  const actionsEl = document.getElementById('push-banner-actions');
+  const banner = document.getElementById('push-banner');
+  if (stepsEl) stepsEl.style.display = 'block';
+  if (actionsEl) actionsEl.style.display = 'none';
+  if (banner) banner.classList.add('show');
+}
+
+function hidePushBanner() {
+  const banner = document.getElementById('push-banner');
+  if (banner) banner.classList.remove('show');
+}
+
+function dismissPushBanner() {
+  localStorage.setItem(PUSH_BANNER_DISMISS_KEY, '1');
+  hidePushBanner();
+}
+
+async function enablePushFromBanner() {
+  const btn = event && event.target ? event.target : null;
+  if (btn) { btn.textContent = 'Turning on...'; btn.disabled = true; }
+  await enablePush(true);
+  if (btn) { btn.textContent = 'Turn on notifications'; btn.disabled = false; }
+}
+
+// --- Settings section ---
+function refreshPushSettingsUI() {
+  const statusEl = document.getElementById('push-settings-status');
+  const btnEl = document.getElementById('push-settings-btn');
+  const hintEl = document.getElementById('push-settings-hint');
+  if (!statusEl || !btnEl) return;
+
+  if (!pushSupported()) {
+    statusEl.textContent = 'Not supported';
+    statusEl.className = 'push-status push-status-off';
+    btnEl.style.display = 'none';
+    if (hintEl) { hintEl.style.display = 'block'; hintEl.textContent = 'This browser does not support notifications.'; }
+    return;
+  }
+  if (isIOS() && !isStandalone()) {
+    statusEl.textContent = 'Add to home screen';
+    statusEl.className = 'push-status push-status-off';
+    btnEl.textContent = 'How to enable on iPhone';
+    btnEl.style.display = 'inline-flex';
+    if (hintEl) {
+      hintEl.style.display = 'block';
+      hintEl.innerHTML = 'On iPhone: tap <b>Share</b> in Safari, choose <b>Add to Home Screen</b>, then open BookBack from your home screen and enable notifications here.';
+    }
+    return;
+  }
+  const perm = Notification.permission;
+  if (perm === 'granted') {
+    statusEl.textContent = 'On';
+    statusEl.className = 'push-status push-status-on';
+    btnEl.textContent = 'Re-check this device';
+    btnEl.style.display = 'inline-flex';
+    if (hintEl) hintEl.style.display = 'none';
+  } else if (perm === 'denied') {
+    statusEl.textContent = 'Blocked';
+    statusEl.className = 'push-status push-status-blocked';
+    btnEl.style.display = 'none';
+    if (hintEl) { hintEl.style.display = 'block'; hintEl.textContent = 'Notifications are blocked. Turn them back on in your browser/site settings, then reload.'; }
+  } else {
+    statusEl.textContent = 'Off';
+    statusEl.className = 'push-status push-status-off';
+    btnEl.textContent = 'Enable notifications';
+    btnEl.style.display = 'inline-flex';
+    if (hintEl) hintEl.style.display = 'none';
+  }
+}
+
+async function enablePushFromSettings() {
+  if (isIOS() && !isStandalone()) {
+    // Just surface the steps on the home banner and send them there
+    showToast('Add BookBack to your home screen first — see the steps on the Home tab');
+    maybeShowPushBanner();
+    return;
+  }
+  const btn = document.getElementById('push-settings-btn');
+  if (btn) { btn.textContent = 'Working...'; btn.disabled = true; }
+  await enablePush(true);
+  if (btn) { btn.disabled = false; }
+  refreshPushSettingsUI();
 }
 
 // INIT
