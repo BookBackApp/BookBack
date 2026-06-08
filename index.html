@@ -1827,13 +1827,19 @@ async function saveDeviceToken(token) {
 // Register the service worker, get a token, save it. Returns true on success.
 async function registerPushToken() {
   const messaging = ensureFirebase();
-  if (!messaging) return false;
+  if (!messaging) { showToast('Firebase did not load', 'error'); return false; }
   try {
     const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    await navigator.serviceWorker.ready;
     const token = await messaging.getToken({ vapidKey: FIREBASE_VAPID_KEY, serviceWorkerRegistration: reg });
     if (token) { await saveDeviceToken(token); return true; }
+    showToast('No token returned', 'error');
     return false;
-  } catch(e) { console.warn('Push token registration failed:', e.message); return false; }
+  } catch(e) {
+    console.warn('Push token registration failed:', e.message);
+    showToast('Push error: ' + e.message, 'error');
+    return false;
+  }
 }
 
 // Core: ask permission (if needed) and register. `interactive` = triggered by a button tap.
