@@ -889,6 +889,10 @@
       <div class="phone-preview" id="phone-norm-preview"></div>
     </div>
     <div class="form-group"><label class="form-label">Last Visit Date</label><input class="form-input" type="date" id="client-lastvisit" style="cursor:pointer;color-scheme:dark"></div>
+    <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <input type="checkbox" id="client-send-welcome" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer;flex-shrink:0">
+      <label for="client-send-welcome" style="font-size:13px;cursor:pointer;line-height:1.4">Send welcome text <span style="color:var(--muted)">(new clients only)</span></label>
+    </div>
     <div class="form-actions">
       <button class="btn btn-secondary" onclick="closeModal('add-client-modal')">Cancel</button>
       <button class="btn btn-primary" onclick="addClient()" id="add-client-btn">Add Client</button>
@@ -1338,16 +1342,18 @@ async function addClient() {
   const lastName = document.getElementById('client-lastname').value.trim();
   const rawPhone = document.getElementById('client-phone').value.trim();
   const lastVisit = document.getElementById('client-lastvisit').value;
+  const sendWelcome = document.getElementById('client-send-welcome').checked;
   if (!firstName || !rawPhone) { showToast('First name and phone are required', 'error'); return; }
   const phone = normalisePhone(rawPhone);
   const btn = document.getElementById('add-client-btn');
   btn.textContent = 'Adding...'; btn.disabled = true;
   try {
-    await db('clients', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, first_name: firstName, last_name: lastName, phone, phone_normalized: phone, last_visit: lastVisit || null, import_source: 'new', created_at: new Date().toISOString(), updated_at: new Date().toISOString() } });
+    await db('clients', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, first_name: firstName, last_name: lastName, phone, phone_normalized: phone, last_visit: lastVisit || null, import_source: sendWelcome ? 'new' : 'existing', created_at: new Date().toISOString(), updated_at: new Date().toISOString() } });
     closeModal('add-client-modal');
-    showToast(`${firstName} added — welcome text fires in 60 mins ✓`);
+    showToast(sendWelcome ? `${firstName} added — welcome text fires in 60 mins ✓` : `${firstName} added ✓`);
     ['client-firstname','client-lastname','client-phone','client-lastvisit'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('phone-norm-preview').style.display = 'none';
+    document.getElementById('client-send-welcome').checked = false;
     loadClients();
   } catch(e) {
     if (e.message?.includes('duplicate') || e.message?.includes('unique') || e.message?.includes('already exists')) {
