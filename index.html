@@ -719,6 +719,10 @@
       <div class="page-title">Replies</div>
       <div class="page-subtitle">Messages from your clients</div>
     </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <input type="checkbox" id="replies-read-toggle" onchange="loadReplies()" style="width:16px;height:16px;accent-color:var(--green);cursor:pointer">
+      <label for="replies-read-toggle" style="font-size:13px;color:var(--muted);cursor:pointer">Show read replies</label>
+    </div>
     <div class="list" id="replies-list">
       <div class="empty-state">
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -1508,36 +1512,44 @@ async function loadReplies() {
   const el = document.getElementById('replies-list');
   el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>Loading...</p></div>';
   try {
-    const replies = await db('replies', { select: '*', filter: `account_id=eq.${currentAccountId}`, order: 'created_at.desc' });
-    if (!replies || replies.length === 0) {
+    const allReplies = await db('replies', { select: '*', filter: `account_id=eq.${currentAccountId}`, order: 'created_at.desc' });
+    const showRead = document.getElementById('replies-read-toggle')?.checked;
+    const replies = showRead ? allReplies : allReplies.filter(r => !r.read);
+    if (!allReplies || allReplies.length === 0) {
       el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No replies yet — they\'ll appear here when clients text back</p></div>';
+      const unread = 0;
+      updateRepliesBadge(unread);
       return;
     }
-    // Match phone numbers to client names
-    const clients = await db('clients', { select: 'id,first_name,last_name,phone_normalized', filter: `account_id=eq.${currentAccountId}` });
-    el.innerHTML = replies.map(r => {
-      const client = clients.find(c => c.phone_normalized === r.phone || c.id === r.client_id);
-      const name = client ? `${client.first_name} ${client.last_name}` : 'Unknown';
-      const smsHref = r.phone ? `sms:${r.phone}` : null;
-      return `
-        <div class="reply-card ${r.read ? '' : 'unread'}" id="reply-${r.id}">
-          <div class="reply-header">
-            <div class="reply-name">${name}</div>
-            <div class="reply-time">${formatTimeAgo(r.created_at)}</div>
-          </div>
-          ${r.phone ? `<div class="reply-phone">${r.phone}</div>` : ''}
-          <div class="reply-message">${r.message || ''}</div>
-          <div class="reply-actions">
-            ${smsHref ? `<a class="btn-reply-sms" href="${smsHref}"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Reply via SMS</a>` : ''}
-            ${!r.read
-              ? `<button class="btn-mark-read" onclick="markReplyRead('${r.id}', this)">Mark as read</button>`
-              : `<span class="reply-read-label">✓ Read</span>`
-            }
-          </div>
-        </div>`;
-    }).join('');
-    // Update badge with current unread count
-    const unread = replies.filter(r => !r.read).length;
+    if (replies.length === 0) {
+      el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No unread replies — nice and tidy ✓</p></div>';
+    } else {
+      // Match phone numbers to client names
+      const clients = await db('clients', { select: 'id,first_name,last_name,phone_normalized', filter: `account_id=eq.${currentAccountId}` });
+      el.innerHTML = replies.map(r => {
+        const client = clients.find(c => c.phone_normalized === r.phone || c.id === r.client_id);
+        const name = client ? `${client.first_name} ${client.last_name}` : 'Unknown';
+        const smsHref = r.phone ? `sms:${r.phone}` : null;
+        return `
+          <div class="reply-card ${r.read ? '' : 'unread'}" id="reply-${r.id}">
+            <div class="reply-header">
+              <div class="reply-name">${name}</div>
+              <div class="reply-time">${formatTimeAgo(r.created_at)}</div>
+            </div>
+            ${r.phone ? `<div class="reply-phone">${r.phone}</div>` : ''}
+            <div class="reply-message">${r.message || ''}</div>
+            <div class="reply-actions">
+              ${smsHref ? `<a class="btn-reply-sms" href="${smsHref}"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Reply via SMS</a>` : ''}
+              ${!r.read
+                ? `<button class="btn-mark-read" onclick="markReplyRead('${r.id}', this)">Mark as read</button>`
+                : `<span class="reply-read-label">✓ Read</span>`
+              }
+            </div>
+          </div>`;
+      }).join('');
+    }
+    // Badge always counts unread regardless of toggle
+    const unread = allReplies.filter(r => !r.read).length;
     updateRepliesBadge(unread);
   } catch(e) {
     el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>Could not load replies</p></div>';
@@ -1553,14 +1565,28 @@ async function markReplyRead(replyId, btn) {
       headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify({ read: true })
     });
-    // Update card UI
+    const showRead = document.getElementById('replies-read-toggle')?.checked;
     const card = document.getElementById('reply-' + replyId);
     if (card) {
-      card.classList.remove('unread');
-      const label = document.createElement('span');
-      label.className = 'reply-read-label';
-      label.textContent = '✓ Read';
-      btn.replaceWith(label);
+      if (showRead) {
+        card.classList.remove('unread');
+        const label = document.createElement('span');
+        label.className = 'reply-read-label';
+        label.textContent = '✓ Read';
+        btn.replaceWith(label);
+      } else {
+        card.style.transition = 'opacity 0.25s, transform 0.25s';
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(20px)';
+        setTimeout(() => {
+          card.remove();
+          loadUnreadRepliesCount();
+          const list = document.getElementById('replies-list');
+          if (list && list.children.length === 0) {
+            list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No unread replies — nice and tidy ✓</p></div>';
+          }
+        }, 250);
+      }
     }
     // Refresh badge count
     loadUnreadRepliesCount();
