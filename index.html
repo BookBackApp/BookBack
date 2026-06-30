@@ -1212,9 +1212,25 @@ function previewPhoneNorm(input) {
   const preview = document.getElementById('phone-norm-preview');
   if (!raw) { preview.style.display = 'none'; return; }
   const normalised = normalisePhone(raw);
-  if (normalised !== raw.replace(/[\s\-().]/g, '')) { preview.textContent = `Will be saved as: ${normalised}`; preview.style.display = 'block'; }
-  else { preview.style.display = 'none'; }
+  if (!isLikelyUKNumber(raw)) {
+    preview.textContent = '⚠️ This doesn\'t look like a UK number — BookBack currently only supports UK numbers';
+    preview.style.color = 'var(--danger)';
+    preview.style.display = 'block';
+  } else if (normalised !== raw.replace(/[\s\-().]/g, '')) {
+    preview.textContent = `Will be saved as: ${normalised}`;
+    preview.style.color = 'var(--green)';
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
 }
+function isLikelyUKNumber(raw) {
+  const p = raw.replace(/[\s\-().]/g, '');
+  return (p.startsWith('07') && p.length === 11) ||
+         (p.startsWith('447') && p.length === 12) ||
+         (p.startsWith('+44') && p.length === 13);
+}
+
 
 // HOME
 async function loadHome() {
@@ -1344,6 +1360,7 @@ async function addClient() {
   const lastVisit = document.getElementById('client-lastvisit').value;
   const sendWelcome = document.getElementById('client-send-welcome').checked;
   if (!firstName || !rawPhone) { showToast('First name and phone are required', 'error'); return; }
+  if (!isLikelyUKNumber(rawPhone)) { showToast('BookBack currently only supports UK numbers', 'error'); return; }
   const phone = normalisePhone(rawPhone);
   const btn = document.getElementById('add-client-btn');
   btn.textContent = 'Adding...'; btn.disabled = true;
@@ -1356,12 +1373,7 @@ async function addClient() {
     document.getElementById('client-send-welcome').checked = false;
     loadClients();
   } catch(e) {
-    if (e.message?.includes('duplicate') || e.message?.includes('unique') || e.message?.includes('already exists')) {
-      showToast('A client with this phone number already exists', 'error');
-    } else {
-      showToast('Something went wrong — please try again', 'error');
-    }
-  }
+    if (e.message?.includes('duplicate') ||
   finally { btn.textContent = 'Add Client'; btn.disabled = false; }
 }
 
