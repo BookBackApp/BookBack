@@ -1372,8 +1372,13 @@ async function addClient() {
     document.getElementById('phone-norm-preview').style.display = 'none';
     document.getElementById('client-send-welcome').checked = false;
     loadClients();
-  } catch(e) {
-    if (e.message?.includes('duplicate') ||
+  }  catch(e) {
+    if (e.message?.includes('duplicate') || e.message?.includes('unique') || e.message?.includes('already exists')) {
+      showToast('A client with this phone number already exists', 'error');
+    } else {
+      showToast('Something went wrong — please try again', 'error');
+    }
+  }
   finally { btn.textContent = 'Add Client'; btn.disabled = false; }
 }
 
