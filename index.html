@@ -1926,19 +1926,10 @@ function ensureFirebase() {
   } catch(e) { console.warn('Firebase init failed:', e.message); return null; }
 }
 
-// Save a device token to this account's push_tokens array
-// Replaces the full array each time to avoid stale token buildup
 async function saveDeviceToken(token) {
   if (!currentAccountId || !token) return;
   try {
-    const rows = await db('accounts', { select: 'push_tokens', filter: `id=eq.${currentAccountId}` });
-    let tokens = (rows && rows[0] && Array.isArray(rows[0].push_tokens)) ? rows[0].push_tokens : [];
-    // Remove any stale versions of this token and add the fresh one
-    tokens = tokens.filter(t => t !== token);
-    tokens.push(token);
-    // Keep max 5 tokens per account (prevents unbounded growth)
-    if (tokens.length > 5) tokens = tokens.slice(-5);
-    await db('accounts', { method: 'PATCH', filter: `id=eq.${currentAccountId}`, prefer: 'return=minimal', body: { push_tokens: tokens, updated_at: new Date().toISOString() } });
+    await db('accounts', { method: 'PATCH', filter: `id=eq.${currentAccountId}`, prefer: 'return=minimal', body: { push_tokens: [token], updated_at: new Date().toISOString() } });
   } catch(e) { console.warn('Could not save device token:', e.message); }
 }
 
