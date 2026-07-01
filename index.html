@@ -251,7 +251,24 @@
   .auth-link { color: var(--green); cursor: pointer; font-size: 13px; text-align: center; display: block; margin-top: 14px; }
 
   * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-
+/* ===== ADD TO HOME SCREEN MODAL (iOS only) ===== */
+  .a2hs-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:400; align-items:flex-end; justify-content:center; backdrop-filter:blur(6px); }
+  .a2hs-overlay.show { display:flex; }
+  .a2hs-modal { background:#1a1f1c; border:1px solid rgba(0,230,118,0.3); border-radius:24px 24px 0 0; padding:28px 24px; padding-bottom:calc(28px + env(safe-area-inset-bottom)); width:100%; max-width:480px; }
+  .a2hs-handle { width:36px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin:0 auto 24px; }
+  .a2hs-icon { width:64px; height:64px; background:rgba(0,230,118,0.15); border:1px solid rgba(0,230,118,0.3); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+  .a2hs-icon svg { width:32px; height:32px; stroke:var(--green); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  .a2hs-title { font-size:22px; font-weight:700; color:#fff; text-align:center; margin-bottom:10px; }
+  .a2hs-sub { font-size:14px; color:#a8b5ae; text-align:center; line-height:1.5; margin-bottom:28px; }
+  .a2hs-steps { display:flex; flex-direction:column; gap:14px; margin-bottom:28px; }
+  .a2hs-step { display:flex; align-items:flex-start; gap:14px; }
+  .a2hs-step-num { width:28px; height:28px; border-radius:8px; background:var(--green); color:#04140b; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .a2hs-step-text { font-size:14px; color:#d4ddd8; line-height:1.5; padding-top:4px; }
+  .a2hs-step-text b { color:#fff; }
+  .a2hs-share-icon { display:inline-flex; vertical-align:middle; width:16px; height:16px; margin:0 2px; }
+  .a2hs-share-icon svg { width:16px; height:16px; stroke:var(--green); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .a2hs-btn { width:100%; padding:15px; background:var(--green); color:#04140b; border:none; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700; cursor:pointer; }
+  .a2hs-skip { display:block; text-align:center; margin-top:14px; font-size:13px; color:#6b7a73; cursor:pointer; }
   /* ===== PUSH NOTIFICATION BANNER (namespaced — cannot affect app) ===== */
   .push-banner { display:none; margin:0 0 16px; background:linear-gradient(135deg,#1c3828,#11251a); border:1px solid var(--green); border-radius:14px; padding:16px; position:relative; }
   .push-banner.show { display:block; }
@@ -937,7 +954,37 @@
     </div>
   </div>
 </div>
-
+<!-- ADD TO HOME SCREEN MODAL (iOS only) -->
+<div class="a2hs-overlay" id="a2hs-overlay">
+  <div class="a2hs-modal">
+    <div class="a2hs-handle"></div>
+    <div class="a2hs-icon">
+      <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+    </div>
+    <div class="a2hs-title">Add BookBack to your home screen</div>
+    <div class="a2hs-sub">To get instant alerts when clients reply, you need to add BookBack to your iPhone home screen. It takes 10 seconds.</div>
+    <div class="a2hs-steps">
+      <div class="a2hs-step">
+        <div class="a2hs-step-num">1</div>
+        <div class="a2hs-step-text">Tap the <span class="a2hs-share-icon"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></span> <b>Share</b> button at the bottom of Safari</div>
+      </div>
+      <div class="a2hs-step">
+        <div class="a2hs-step-num">2</div>
+        <div class="a2hs-step-text">Scroll down and tap <b>Add to Home Screen</b></div>
+      </div>
+      <div class="a2hs-step">
+        <div class="a2hs-step-num">3</div>
+        <div class="a2hs-step-text">Tap <b>Add</b> in the top right corner</div>
+      </div>
+      <div class="a2hs-step">
+        <div class="a2hs-step-num">4</div>
+        <div class="a2hs-step-text">Open BookBack from your home screen icon and turn on notifications in Settings</div>
+      </div>
+    </div>
+    <button class="a2hs-btn" onclick="dismissA2HS()">Got it — I'll add it now</button>
+    <span class="a2hs-skip" onclick="skipA2HS()">Remind me later</span>
+  </div>
+</div>
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1825,7 +1872,26 @@ const FIREBASE_CONFIG = {
 };
 const FIREBASE_VAPID_KEY = "BF7WNloCY1Bp8Sk7HKl7cUCrGb7_4843zGFvHd6gmccuIoNp83ZpHEe1d1jz6tF57zjMWu2mxnJGjPTpJp1NbnI";
 const PUSH_BANNER_DISMISS_KEY = 'bb_push_banner_dismissed';
+const A2HS_DISMISS_KEY = 'bb_a2hs_dismissed';
 
+function maybeShowA2HS() {
+  if (!isIOS()) return;
+  if (isStandalone()) return;
+  if (localStorage.getItem(A2HS_DISMISS_KEY) === 'permanent') return;
+  document.getElementById('a2hs-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function dismissA2HS() {
+  document.getElementById('a2hs-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+  localStorage.setItem(A2HS_DISMISS_KEY, 'permanent');
+}
+
+function skipA2HS() {
+  document.getElementById('a2hs-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
 let fbMessaging = null;
 
 // Is this device an iPhone/iPad?
@@ -1922,15 +1988,13 @@ async function enablePush(interactive) {
   return perm;
 }
 
-// --- Home-page banner ---
 function initPushAfterLogin() {
-  // If already granted on this device, silently refresh the token (e.g. token rotated)
+  maybeShowA2HS();
   if (pushSupported() && Notification.permission === 'granted' && !(isIOS() && !isStandalone())) {
     registerPushToken();
     hidePushBanner();
     return;
   }
-  // Otherwise, maybe show the banner
   maybeShowPushBanner();
 }
 
