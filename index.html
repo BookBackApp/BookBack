@@ -1942,13 +1942,18 @@ async function saveDeviceToken(token) {
   } catch(e) { console.warn('Could not save device token:', e.message); }
 }
 
-// Register the service worker, get a token, save it. Returns true on success.
 async function registerPushToken() {
   const messaging = ensureFirebase();
   if (!messaging) { showToast('Firebase did not load', 'error'); return false; }
   try {
     const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
     await navigator.serviceWorker.ready;
+    // Delete any existing token first to force a fresh one
+    try {
+      const oldToken = await messaging.getToken({ vapidKey: FIREBASE_VAPID_KEY, serviceWorkerRegistration: reg });
+      if (oldToken) await messaging.deleteToken();
+    } catch(e) { /* ignore delete errors */ }
+    // Now get a fresh token
     const token = await messaging.getToken({ vapidKey: FIREBASE_VAPID_KEY, serviceWorkerRegistration: reg });
     if (token) { await saveDeviceToken(token); return true; }
     showToast('No token returned', 'error');
