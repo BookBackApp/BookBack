@@ -1927,9 +1927,11 @@ function ensureFirebase() {
 }
 
 async function saveDeviceToken(token) {
-  if (!currentAccountId || !token) return;
+  if (!token) return;
+  const accountId = currentAccountId || (currentSession ? (await db('accounts', { select: 'id', filter: `user_id=eq.${currentSession.user.id}` }))?.[0]?.id : null);
+  if (!accountId) { console.warn('No account ID for token save'); return; }
   try {
-    await db('accounts', { method: 'PATCH', filter: `id=eq.${currentAccountId}`, prefer: 'return=minimal', body: { push_tokens: [token], updated_at: new Date().toISOString() } });
+    await db('accounts', { method: 'PATCH', filter: `id=eq.${accountId}`, prefer: 'return=minimal', body: { push_tokens: [token], updated_at: new Date().toISOString() } });
   } catch(e) { console.warn('Could not save device token:', e.message); }
 }
 
