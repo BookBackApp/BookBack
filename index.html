@@ -1406,10 +1406,18 @@ async function loadBookings() {
   const el = document.getElementById('home-bookings-list');
   try {
     const bookings = await db('bookings', { 
-      select: '*,clients(first_name,last_name)', 
+      select: '*',
       filter: `account_id=eq.${currentAccountId}&booking_time=gte.${new Date().toISOString()}&status=eq.confirmed`, 
       order: 'booking_time.asc' 
     });
+    if (bookings && bookings.length > 0) {
+      const clientIds = bookings.map(b => `"${b.client_id}"`).join(',');
+      const clients = await db('clients', { select: 'id,first_name,last_name', filter: `id=in.(${clientIds})` });
+      bookings.forEach(b => {
+        const c = clients.find(c => c.id === b.client_id);
+        if (c) b.clients = { first_name: c.first_name, last_name: c.last_name };
+      });
+    }
     if (!bookings || bookings.length === 0) {
       el.innerHTML = `
         <div class="empty-state" style="padding:28px 20px;text-align:center">
