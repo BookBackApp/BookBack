@@ -1048,7 +1048,7 @@ async function startApp(session) {
   document.getElementById('app-root').style.display = 'block';
   document.getElementById('bottom-nav').style.display = 'flex';
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/accounts?user_id=eq.${session.user.id}&select=id,staff_name,business_name,logo_url`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/accounts?user_id=eq.${session.user.id}&select=id,staff_name,business_name,logo_url,subscription_status,trial_ends_at,is_exempt`, {
       headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${session.access_token}` }
     });
     const accounts = await res.json();
@@ -1059,6 +1059,22 @@ async function startApp(session) {
       document.getElementById('home-greeting').textContent = `Hey, ${currentStaffName} 👋`;
       if (accounts[0].logo_url) updateLogoDisplay(accounts[0].logo_url);
       if (session.user.email === ADMIN_EMAIL) document.getElementById('nav-admin').style.display = 'flex';
+
+      // TRIAL / SUBSCRIPTION GATE
+      const account = accounts[0];
+      const now = new Date();
+      const trialEnd = account.trial_ends_at ? new Date(account.trial_ends_at) : null;
+      const trialExpired = trialEnd && now > trialEnd;
+      const notActive = account.subscription_status !== 'active';
+
+      if (!account.is_exempt && trialExpired && notActive) {
+        showPaywall();
+        return;
+      }
+      if (!account.is_exempt && trialEnd && !trialExpired) {
+        const daysLeft = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
+        showTrialBanner(daysLeft);
+      }
     }
   } catch(e) { console.error('Account load failed', e); }
   loadHome();
@@ -1135,6 +1151,53 @@ async function forgotPassword() {
     document.getElementById('forgot-email').value = '';
   } catch(e) { showAuthError(e.message); }
   finally { btn.textContent = 'Send Reset Link'; btn.disabled = false; }
+}
+
+// TRIAL & PAYWALL
+function showTrialBanner(daysLeft) {
+  let banner = document.getElementById('trial-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'trial-banner';
+    banner.style.cssText = 'background:rgba(0,230,118,0.15);border-bottom:1px solid rgba(0,230,118,0.3);color:#fff;padding:10px 16px;text-align:center;font-size:13px;position:sticky;top:0;z-index:50;display:flex;justify-content:center;align-items:center;gap:12px';
+    document.getElementById('app-root').prepend(banner);
+  }
+  banner.innerHTML = `<span>🎁 ${daysLeft} day${daysLeft === 1 ? '' : 's'} left in your free trial</span> <button onclick="startCheckout()" style="background:#00e676;color:#04140b;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer">Subscribe now</button>`;
+}
+
+function showPaywall() {
+  document.getElementById('app-root').style.display = 'none';
+  document.getElementById('bottom-nav').style.display = 'none';
+  const existing = document.getElementById('paywall-screen');
+  if (existing) { existing.style.display = 'flex'; return; }
+  const paywall = document.createElement('div');
+  paywall.id = 'paywall-screen';
+  paywall.style.cssText = 'position:fixed;inset:0;background:#04140b;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;z-index:1000';
+  paywall.innerHTML = `
+    <div style="max-width:420px">
+      <div style="font-size:48px;margin-bottom:16px">⏰</div>
+      <h1 style="font-size:26px;font-weight:700;color:#fff;margin-bottom:12px">Your free trial has ended</h1>
+      <p style="font-size:15px;color:#a8c4b0;line-height:1.5;margin-bottom:28px">Subscribe to keep your automations running and continue growing your business with BookBack.</p>
+      <div style="background:#1a1f1c;border:1px solid rgba(0,230,118,0.3);border-radius:16px;padding:24px;margin-bottom:20px">
+        <div style="font-size:36px;font-weight:800;color:#fff">£29.99<span style="font-size:16px;color:#a8c4b0;font-weight:500">/month</span></div>
+        <div style="font-size:12px;color:#a8c4b0;margin-top:4px">Cancel anytime</div>
+      </div>
+      <button onclick="startCheckout()" style="width:100%;background:#00e676;color:#04140b;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:12px">Subscribe now</button>
+      <button onclick="logoutUser()" style="width:100%;background:transparent;color:#a8c4b0;border:none;padding:12px;font-size:13px;cursor:pointer;font-family:inherit">Log out</button>
+    </div>`;
+  document.body.appendChild(paywall);
+}
+
+async function startCheckout() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${currentSession.access_token}`, 'Content-Type': 'application/json' },
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else showToast(data.error || 'Could not start checkout', 'error');
+  } catch(e) { showToast('Checkout failed — please try again', 'error'); }
 }
 
 function logoutUser() {
