@@ -1159,7 +1159,7 @@ function showTrialBanner(daysLeft) {
   if (!banner) {
     banner = document.createElement('div');
     banner.id = 'trial-banner';
-    banner.style.cssText = 'background:rgba(0,230,118,0.15);border-bottom:1px solid rgba(0,230,118,0.3);color:#fff;padding:10px 16px;text-align:center;font-size:13px;position:sticky;top:0;z-index:50;display:flex;justify-content:center;align-items:center;gap:12px';
+    banner.style.cssText = 'background:#0a2e1a;border-bottom:1px solid rgba(0,230,118,0.4);color:#00e676;padding:10px 16px;text-align:center;font-size:13px;font-weight:600;position:sticky;top:0;z-index:50;display:flex;justify-content:center;align-items:center;gap:12px';
     document.getElementById('app-root').prepend(banner);
   }
   banner.innerHTML = `<span>🎁 ${daysLeft} day${daysLeft === 1 ? '' : 's'} left in your free trial</span> <button onclick="startCheckout()" style="background:#00e676;color:#04140b;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer">Subscribe now</button>`;
