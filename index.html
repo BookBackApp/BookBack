@@ -72,7 +72,7 @@
   }
 
   .page { display: none; min-height: 100vh; padding-bottom: 80px; }
-  .page.active { display: block; }
+  .page.active { display: block !important; min-height: 100vh !important; width: 100% !important; }
 
   .banner { background: linear-gradient(135deg, #e8f8f0 0%, #f0faf5 60%, #f8f8f6 100%); padding: 20px 16px; border-bottom: 1px solid var(--border); }
   .banner-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -645,7 +645,7 @@
 </div>
 
 <!-- APP ROOT -->
-<div id="app-root" style="display:none">
+#app-root { width: 100% !important; min-height: 100vh !important; display: block !important; }
 
 <!-- HOME PAGE -->
 <div class="page active" id="page-home">
