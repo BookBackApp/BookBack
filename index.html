@@ -41,7 +41,7 @@
     #app-root { width: 100%; max-width: 480px; background: var(--bg); min-height: 100vh; position: relative; box-shadow: 0 0 60px rgba(0,0,0,0.6); }
   }
 
-  #app-root { width: 100%; min-height: 100vh; }
+  #app-root { width: 100%; }
 
   .bottom-nav {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -72,7 +72,7 @@
   }
 
   .page { display: none; min-height: 100vh; padding-bottom: 80px; }
-  .page.active { display: block !important; min-height: 100vh !important; width: 100% !important; }
+  .page.active { display: block; }
 
   .banner { background: linear-gradient(135deg, #e8f8f0 0%, #f0faf5 60%, #f8f8f6 100%); padding: 20px 16px; border-bottom: 1px solid var(--border); }
   .banner-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -645,7 +645,7 @@
 </div>
 
 <!-- APP ROOT -->
-#app-root { width: 100% !important; min-height: 100vh !important; display: block !important; }
+<div id="app-root" style="display:none">
 
 <!-- HOME PAGE -->
 <div class="page active" id="page-home">
@@ -690,13 +690,13 @@
       <div class="stat-card full"><div class="stat-label">Texts Sent This Month</div><div class="stat-value" id="stat-texts">—</div></div>
     </div>
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('inactive', this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Inactive</div>
-      <div class="tab" onclick="switchTab('slots', this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Gap Slots</div>
-      <div class="tab" onclick="switchTab('bookings', this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Bookings</div>
+      <div class="tab active" onclick="switchTab('inactive', this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Inactive Clients</div>
+      <div class="tab" onclick="switchTab('slots', this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Open Gap Slots</div>
     </div>
     <div id="tab-inactive"><div class="list" id="home-inactive-list"><div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>Loading...</p></div></div></div>
     <div id="tab-slots" style="display:none"><div class="list" id="home-gap-list"><div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>Loading...</p></div></div></div>
-    <div id="tab-bookings" style="display:none"><div class="list" id="home-bookings-list"><div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>Loading...</p></div></div></div>
+  </div>
+</div>
 
 <!-- CLIENTS PAGE -->
 <div class="page" id="page-clients">
@@ -916,28 +916,6 @@
     <div class="form-actions">
       <button class="btn btn-secondary" onclick="closeModal('add-client-modal')">Cancel</button>
       <button class="btn btn-primary" onclick="addClient()" id="add-client-btn">Add Client</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADD BOOKING MODAL -->
-<div class="modal-overlay" id="booking-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Add Booking</div>
-    <div class="form-group">
-      <label class="form-label">Client</label>
-      <select class="form-input" id="booking-client" style="color-scheme:dark">
-        <option value="">Select a client...</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="booking-date" style="cursor:pointer;color-scheme:dark"></div>
-      <div class="form-group"><label class="form-label">Time</label><input class="form-input" type="time" id="booking-time" style="cursor:pointer;color-scheme:dark"></div>
-    </div>
-    <div class="form-actions">
-      <button class="btn btn-secondary" onclick="closeModal('booking-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveBooking()" id="save-booking-btn">Add booking</button>
     </div>
   </div>
 </div>
@@ -1295,8 +1273,6 @@ function switchTab(tab, el) {
   el.classList.add('active');
   document.getElementById('tab-inactive').style.display = tab === 'inactive' ? 'block' : 'none';
   document.getElementById('tab-slots').style.display = tab === 'slots' ? 'block' : 'none';
-  document.getElementById('tab-bookings').style.display = tab === 'bookings' ? 'block' : 'none';
-  if (tab === 'bookings') loadBookings();
 }
 
 function openModal(id) {
@@ -1384,8 +1360,8 @@ async function loadHome() {
       document.getElementById('home-inactive-list').innerHTML = `
         <div class="empty-state" style="padding:28px 20px;text-align:center">
           <svg viewBox="0 0 24 24" style="width:40px;height:40px;stroke:#00e676;fill:none;stroke-width:1.5;margin-bottom:16px"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          <p style="font-size:17px;font-weight:600;color:#04140b;margin-bottom:8px">Welcome to BookBack 👋</p>
-          <p style="font-size:14px;color:#5a6b62;line-height:1.5;margin-bottom:20px">Add your first client to get started. Once clients are in, the automations run themselves.</p>
+          <p style="font-size:17px;font-weight:600;color:#fff;margin-bottom:8px">Welcome to BookBack 👋</p>
+          <p style="font-size:14px;color:#a8c4b0;line-height:1.5;margin-bottom:20px">Add your first client to get started. Once clients are in, the automations run themselves.</p>
           <button onclick="openModal('add-client-modal')" style="background:#00e676;color:#04140b;border:none;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Add your first client</button>
         </div>`;
     } else {
@@ -1399,95 +1375,6 @@ async function loadHome() {
       ? `<div class="empty-state"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>No open gap slots</p></div>`
       : slots.map(s => gapCardHTML(s)).join('');
   } catch(e) { showToast('Could not load data — check your connection', 'error'); }
-}
-// BOOKINGS
-async function loadBookings() {
-  if (!currentAccountId) return;
-  const el = document.getElementById('home-bookings-list');
-  try {
-    const bookings = await db('bookings', { 
-      select: '*',
-      filter: `account_id=eq.${currentAccountId}&booking_time=gte.${new Date().toISOString()}&status=eq.confirmed`, 
-      order: 'booking_time.asc' 
-    });
-    if (bookings && bookings.length > 0) {
-      const clientIds = bookings.map(b => `"${b.client_id}"`).join(',');
-      const clients = await db('clients', { select: 'id,first_name,last_name', filter: `id=in.(${clientIds})` });
-      bookings.forEach(b => {
-        const c = clients.find(c => c.id === b.client_id);
-        if (c) b.clients = { first_name: c.first_name, last_name: c.last_name };
-      });
-    }
-    if (!bookings || bookings.length === 0) {
-      el.innerHTML = `
-        <div class="empty-state" style="padding:28px 20px;text-align:center">
-          <svg viewBox="0 0 24 24" style="width:40px;height:40px;stroke:#00e676;fill:none;stroke-width:1.5;margin-bottom:16px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <p style="font-size:17px;font-weight:600;color:#04140b;margin-bottom:8px">No upcoming bookings</p>
-          <p style="font-size:14px;color:#5a6b62;line-height:1.5;margin-bottom:20px">Add bookings so BookBack knows not to send win-back texts to clients with upcoming appointments.</p>
-          <button onclick="openBookingModal()" style="background:#00e676;color:#04140b;border:none;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Add booking</button>
-        </div>`;
-      return;
-    }
-    el.innerHTML = `<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button onclick="openBookingModal()" style="background:#00e676;color:#04140b;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">+ Add booking</button></div>` + bookings.map(b => {
-      const name = b.clients ? `${b.clients.first_name} ${b.clients.last_name}` : 'Unknown';
-      const date = new Date(b.booking_time);
-      const dateStr = date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-      const timeStr = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-      return `
-        <div class="client-card">
-          <div class="client-name">${name}</div>
-          <div class="client-meta">
-            <div><div class="meta-label">Date</div><div class="meta-value">${dateStr}</div></div>
-            <div><div class="meta-label">Time</div><div class="meta-value">${timeStr}</div></div>
-            ${b.source === 'square' ? `<div><div class="meta-label">Source</div><div class="meta-value" style="color:var(--green)">Square</div></div>` : ''}
-          </div>
-          <div style="display:flex;gap:8px;margin-top:4px">
-            <button class="btn-delete" onclick="cancelBooking('${b.id}')" title="Cancel booking">
-              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
-            </button>
-          </div>
-        </div>`;
-    }).join('');
-  } catch(e) { el.innerHTML = '<div class="empty-state"><p>Could not load bookings</p></div>'; }
-}
-
-async function cancelBooking(id) {
-  if (!confirm('Cancel this booking?')) return;
-  try {
-    await db('bookings', { method: 'PATCH', filter: `id=eq.${id}`, prefer: 'return=minimal', body: { status: 'cancelled', updated_at: new Date().toISOString() } });
-    showToast('Booking cancelled');
-    loadBookings();
-  } catch(e) { showToast('Could not cancel booking', 'error'); }
-}
-
-function openBookingModal() {
-  document.getElementById('booking-modal').classList.add('show');
-  loadBookingClientOptions();
-}
-
-async function loadBookingClientOptions() {
-  const select = document.getElementById('booking-client');
-  select.innerHTML = '<option value="">Loading...</option>';
-  const clients = await db('clients', { select: 'id,first_name,last_name', filter: `account_id=eq.${currentAccountId}&status=neq.opted_out`, order: 'first_name.asc' });
-  select.innerHTML = '<option value="">Select a client...</option>' + clients.map(c => `<option value="${c.id}">${c.first_name} ${c.last_name}</option>`).join('');
-}
-
-async function saveBooking() {
-  const clientId = document.getElementById('booking-client').value;
-  const date = document.getElementById('booking-date').value;
-  const time = document.getElementById('booking-time').value;
-  if (!clientId || !date || !time) { showToast('Please fill in all fields', 'error'); return; }
-  const bookingTime = new Date(`${date}T${time}`).toISOString();
-  const btn = document.getElementById('save-booking-btn');
-  btn.textContent = 'Saving...'; btn.disabled = true;
-  try {
-    await db('bookings', { method: 'POST', prefer: 'return=minimal', body: { account_id: currentAccountId, client_id: clientId, booking_time: bookingTime, source: 'manual', status: 'confirmed', created_at: new Date().toISOString(), updated_at: new Date().toISOString() } });
-    closeModal('booking-modal');
-    showToast('Booking added ✓');
-    ['booking-client','booking-date','booking-time'].forEach(id => document.getElementById(id).value = '');
-    loadBookings();
-  } catch(e) { showToast('Could not save booking — please try again', 'error'); }
-  finally { btn.textContent = 'Add booking'; btn.disabled = false; }
 }
 
 // CLIENTS
